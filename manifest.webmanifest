@@ -1,11 +1,11 @@
 {
   "name": "Music Rainbow",
-  "short_name": "Music Rainbow",
+  "short_name": "MusicRainbow",
   "start_url": "./index.html",
-  "display": "fullscreen",
+  "display": "standalone",
+  "orientation": "landscape",
   "background_color": "#46d1c6",
   "theme_color": "#46d1c6",
-  "description": "Impara a leggere le note musicali in modo divertente.",
   "icons": [
     {
       "src": "icons/icon-192.png",
@@ -16,12 +16,6 @@
       "src": "icons/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
-    },
-    {
-      "src": "icons/icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
     }
   ]
 }
