@@ -2101,6 +2101,7 @@ function hardResetAudio() {
 }
 
 function playTone(freq) {
+  if (navigator.vibrate) navigator.vibrate(15);
   // Prova sempre a sbloccare l'audio al tocco/tasto
   if (!audioUnlocked) {
     try { unlockAudioOnce(); } catch (e) {}
