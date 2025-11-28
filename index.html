@@ -30,9 +30,12 @@
       background: #46d1c6; /* acquamarina pieno */
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
+      padding: 16px 12px 24px;
       z-index: 10000;
       font-family: "Baloo 2", sans-serif;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .home-container {
@@ -217,10 +220,13 @@
     }
 
     .page-container {
-      min-height: 100vh;
+      height: calc(var(--vh) * 100);
+      min-height: 0;
       display: flex;
       justify-content: center;
       align-items: flex-start;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .app {
@@ -1287,13 +1293,10 @@ body {
 
 /* In portrait: blocca il gioco e mostra solo il messaggio */
 @media (orientation: portrait) {
+  /* La home e il gioco sono visibili anche in verticale;
+     l'overlay non viene usato in questa modalità */
   #rotateOverlay {
-    display: flex;
-  }
-
-  #homeScreen,
-  .page-container {
-    display: none !important;
+    display: none;
   }
 }
 
@@ -1311,7 +1314,7 @@ body {
   }
 
   svg.staff {
-    max-height: 120px;
+    max-height: 160px;
   }
 
   .keyboard-container {
@@ -1323,7 +1326,16 @@ body {
   }
 
   .piano-keys {
-    height: 150px;
+    height: 120px;
+  }
+
+  .trophy-main {
+    padding: 10px 8px 4px;
+  }
+
+  .trophy-chest {
+    padding: 14px 18px;
+    font-size: 1rem;
   }
 
   .note-buttons-container {

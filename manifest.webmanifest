@@ -3,7 +3,7 @@
   "short_name": "MusicRainbow",
   "start_url": "./index.html",
   "display": "standalone",
-  "orientation": "landscape",
+  "orientation": "any",
   "background_color": "#46d1c6",
   "theme_color": "#46d1c6",
   "icons": [
