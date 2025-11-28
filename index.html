@@ -729,7 +729,7 @@
     .piano-keys {
       position: relative;
       display: flex;
-      height: 260px;
+      height: 300px;
       width: 100%;
       max-width: none;
       margin: 0;
@@ -2101,6 +2101,10 @@ function hardResetAudio() {
 }
 
 function playTone(freq) {
+  // Prova sempre a sbloccare l'audio al tocco/tasto
+  if (!audioUnlocked) {
+    try { unlockAudioOnce(); } catch (e) {}
+  }
   // Non suonare nulla se l'audio è disattivato
   if (!audioEnabled) return;
 
