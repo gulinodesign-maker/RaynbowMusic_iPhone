@@ -1,0 +1,3369 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#46d1c6" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Music Rainbow" />
+  <meta name="apple-mobile-web-app-orientation" content="landscape" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
+  <link rel="manifest" href="manifest.webmanifest" />
+
+  <meta charset="UTF-8" />
+  <title>Music Rainbow — Livelli</title>
+
+  <!-- Font morbido e grande -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <style>
+    * { box-sizing: border-box; }
+
+    /* ===========================
+       HOME: SELEZIONE LIVELLI
+       =========================== */
+    .home-screen {
+      position: fixed;
+      inset: 0;
+      background: #46d1c6; /* acquamarina pieno */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
+      font-family: "Baloo 2", sans-serif;
+    }
+
+    .home-container {
+      text-align: center;
+      color: #0f172a;
+      padding: 32px 24px 40px;
+      max-width: 460px;
+      width: 100%;
+    }
+
+    .home-title {
+      font-size: 2.6rem;
+      margin-bottom: 8px;
+    }
+
+    .home-subtitle {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      opacity: 0.9;
+    }
+
+    .home-player-box {
+      background: linear-gradient(135deg, #fef9c3, #e0f2fe);
+      border-radius: 20px;
+      padding: 18px 18px 20px;
+      box-shadow: 0 8px 18px rgba(15,23,42,0.25);
+      margin-bottom: 26px;
+      text-align: left;
+      border: 2px solid #bfdbfe;
+    }
+
+    .home-player-label {
+      font-size: 1.1rem;
+      margin-bottom: 6px;
+      font-weight: 700;
+    }
+
+    .home-player-input {
+      width: 100%;
+      border-radius: 999px;
+      border: 3px solid #fbbf24;
+      padding: 10px 16px;
+      font-size: 1.25rem;
+      margin-bottom: 10px;
+      font-family: "Baloo 2", sans-serif;
+      box-shadow: 0 4px 10px rgba(148,163,184,0.45);
+      background: #fefce8;
+    }
+
+    .home-player-input::placeholder {
+      color: #9ca3af;
+    }
+
+    .home-gender-select {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      font-size: 1rem;
+      margin-top: 4px;
+    }
+
+    .home-gender-option {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px 18px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(148,163,184,0.7);
+      min-width: 110px;
+      transition: background 0.12s, transform 0.12s, box-shadow 0.12s, color 0.12s;
+      user-select: none;
+    }
+
+    .home-gender-option input[type="radio"] {
+      display: none;
+    }
+
+    .home-gender-option span {
+      font-size: 1rem;
+    }
+
+    .home-gender-option.active {
+      background: #0ea5e9;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(14,165,233,0.7);
+      transform: translateY(-1px);
+    }
+
+    .home-gender-option:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 4px rgba(148,163,184,0.7);
+    }
+
+    .home-levels {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+
+    .home-level-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 20px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      cursor: pointer;
+      color: #ffffff;
+      box-shadow: 0 6px 14px rgba(15, 23, 42, 0.3);
+      transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
+      width: 100%;
+    }
+
+    .home-level-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 8px rgba(15, 23, 42, 0.3);
+    }
+
+    .home-level-btn:hover {
+      filter: brightness(1.05);
+    }
+
+    .home-level-1    { background: #f97316; }
+    .home-level-2    { background: #4f46e5; }
+    .home-level-3    { background: #22c55e; }
+    .home-level-play { background: #ec4899; }
+    .home-audio-reset { background: #0ea5e9; }
+    
+
+    .home-rainbow-graphic {
+      width: 320px;
+      height: 200px;
+      margin: 0 auto 16px;
+    }
+
+    .home-rainbow-graphic svg {
+      width: 100%;
+      height: 100%;
+      overflow: visible;
+    }
+
+    /* ===========================
+       STILE GENERALE PAGINE LIVELLO
+       =========================== */
+
+    body {
+      font-family: "Baloo 2", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f2f5ff;
+      min-height: 100vh;
+    }
+
+    .page-container {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+    }
+
+    .app {
+      margin: 24px;
+      padding: 24px;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
+      max-width: 920px;
+      width: 100%;
+      position: relative;
+      z-index: 1;
+    }
+
+    .top-panel {
+      border-radius: 20px;
+      border: 2px solid #e0e3f0;
+      padding: 12px 18px 10px;
+      background: linear-gradient(to bottom, #f9fafb, #eef2ff);
+      margin-bottom: 12px;
+    }
+
+    .top-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+
+    .top-row h1 {
+      font-size: 2.2rem;
+      margin: 0;
+      text-align: center;
+      justify-self: center;
+    }
+
+    .top-left-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .top-right-controls {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    .rainbow-title span { display: inline-block; }
+    .rainbow-title span:nth-child(7n+1){color:#ef4444;}
+    .rainbow-title span:nth-child(7n+2){color:#f97316;}
+    .rainbow-title span:nth-child(7n+3){color:#eab308;}
+    .rainbow-title span:nth-child(7n+4){color:#22c55e;}
+    .rainbow-title span:nth-child(7n+5){color:#38bdf8;}
+    .rainbow-title span:nth-child(7n+6){color:#a855f7;}
+    .rainbow-title span:nth-child(7n){color:#4f46e5;}
+
+    /* Switch auto-color livello 1 */
+    .auto-toggle {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8rem;
+      color: #111827;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .auto-toggle-input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+      position: absolute;
+    }
+
+    .auto-slider {
+      position: relative;
+      width: 34px;
+      height: 18px;
+      background-color: #e5e7eb;
+      border-radius: 999px;
+      transition: background-color 0.15s;
+      box-shadow: inset 0 1px 3px rgba(15,23,42,0.2);
+    }
+
+    .auto-slider::before {
+      content: "";
+      position: absolute;
+      height: 14px;
+      width: 14px;
+      left: 2px;
+      top: 2px;
+      background-color: #ffffff;
+      border-radius: 50%;
+      transition: transform 0.15s;
+      box-shadow: 0 1px 3px rgba(15,23,42,0.5);
+    }
+
+    .auto-toggle-input:checked + .auto-slider {
+      background: linear-gradient(90deg, #38bdf8, #a855f7);
+    }
+
+    .auto-toggle-input:checked + .auto-slider::before {
+      transform: translateX(16px);
+    }
+
+    .auto-label {
+      font-size: 0.8rem;
+      padding-right: 2px;
+    }
+
+    .reset-btn {
+      padding: 10px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.05rem;
+      cursor: pointer;
+      border: none;
+      color: #ffffff;
+      background: #7c3aed;
+      box-shadow: 0 4px 10px rgba(80, 30, 140, 0.25);
+      transition: 0.15s;
+    }
+    .reset-btn:hover { filter: brightness(1.1); }
+    .reset-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(80, 30, 140, 0.2);
+    }
+
+    .menu-btn,
+    .trophy-btn,
+    .hint-btn {
+      padding: 10px 16px;
+      min-width: 44px;
+      min-height: 44px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(15,23,42,0.18);
+      transition: 0.15s;
+    }
+
+    .hint-btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+      filter: none;
+    }
+
+    .menu-btn {
+      color: #111827;
+      background: #e5e7eb;
+    }
+
+    .trophy-btn {
+      color: #78350f;
+      background: #facc15;
+      box-shadow: 0 3px 8px rgba(180,83,9,0.25);
+    }
+
+    .hint-btn {
+      color: #0f172a;
+      background: #d1fae5;
+      box-shadow: 0 3px 8px rgba(16,185,129,0.35);
+    }
+
+    .menu-btn:hover,
+    .trophy-btn:hover,
+    .hint-btn:hover { filter: brightness(1.05); }
+
+    .menu-btn:active,
+    .trophy-btn:active,
+    .hint-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 4px rgba(15,23,42,0.4);
+    }
+
+    .rainbow-counter {
+      font-size: 1.05rem;
+      background: #eef2ff;
+      color: #1e3a8a;
+      padding: 8px 14px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 3px 9px rgba(15, 23, 42, 0.16);
+    }
+    .rainbow-counter span {
+      font-weight: 800;
+      font-size: 1.4rem;
+    }
+
+    .medals-panel-container {
+      border-radius: 16px;
+      border: 1px solid #e0e3f0;
+      padding: 6px 10px;
+      background: #f9fafb;
+    }
+    .medals-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 32px;
+      justify-content: center;
+    }
+
+    .medal-icon {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      box-shadow: 0 3px 7px rgba(15,23,42,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      font-size: 0.95rem;
+      font-weight: 700;
+    }
+    .medal-icon::after {
+      content: "🏅";
+      position: absolute;
+      top: -9px;
+      font-size: 1rem;
+    }
+
+    .medal-icon.bronze {
+      background: radial-gradient(circle at 30% 30%, #fef3c7, #f97316, #7c2d12);
+      border: 2px solid #f97316;
+      color: #4a1f07;
+    }
+    .medal-icon.silver {
+      background: radial-gradient(circle at 30% 30%, #f9fafb, #d4d4d8, #4b5563);
+      border: 2px solid #9ca3af;
+      color: #111827;
+    }
+    .medal-icon.gold {
+      background: radial-gradient(circle at 30% 30%, #fef9c3, #facc15, #b45309);
+      border: 2px solid #fbbf24;
+      color: #78350f;
+    }
+
+    .staff-container {
+      border-radius: 20px;
+      border: 2px solid #e0e3f0;
+      padding: 18px;
+      background: linear-gradient(to bottom, #fdfdff, #eef2ff);
+      margin-top: 12px;
+      margin-bottom: 12px;
+    }
+    svg.staff {
+      width: 100%;
+      max-width: 820px;
+      display: block;
+      margin: 0 auto;
+      cursor: pointer;
+    }
+
+    .note-circle {
+      stroke: #111827;
+      stroke-width: 2;
+      fill: white;
+      transition: 0.15s;
+      cursor: pointer;
+    }
+
+    .hint-circle {
+      stroke: #111827;
+      stroke-width: 2;
+      cursor: default;
+    }
+
+    /* TARGET PER LIVELLO */
+    #level1Page .note-circle.target {
+      /* versione compatibile con Safari / iPad:
+         niente gradient url(), bordo spesso e interno evidenziato */
+      stroke: #111827;
+      stroke-width: 4;
+      fill: white;
+      filter: none;
+    }
+
+    #level2Page .note-circle.target,
+    #level3Page .note-circle.target {
+      stroke: #000000;
+      stroke-width: 4;
+      filter: none;
+    }
+
+    .ledger-line {
+      stroke: #111827;
+      stroke-width: 2;
+    }
+
+    .error-x {
+      font-size: 22px;
+      fill: #dc2626;
+      pointer-events: none;
+      animation: pop-fade 0.6s ease-out forwards;
+    }
+    @keyframes pop-fade {
+      0%{opacity:0;transform:scale(0.5);}
+      40%{opacity:1;transform:scale(1.05);}
+      100%{opacity:0;transform:scale(1) translateY(-10px);}
+    }
+
+    /* Barra di stato: solo Note / Errori */
+    .status-bar {
+      text-align: center;
+      font-size: 0.95rem;
+      font-weight: 700;
+      min-height: 1.6em;
+      margin-top: 10px;
+    }
+    .status-pills {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: center;
+    }
+    .stat-pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      min-width: 80px;
+      font-size: 0.9rem;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(15,23,42,0.15);
+    }
+    .stat-notes {
+      background: #dcfce7;
+      color: #166534;
+    }
+    .stat-errors-normal {
+      background: #fef9c3;
+      color: #92400e;
+    }
+    .stat-errors-high {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .keyboard-container {
+      margin-top: 18px;
+      text-align: center;
+    }
+    .piano {
+      max-width: 920px;
+      margin: 0 auto;
+      background: #d4d4d8;
+      padding: 14px 16px 18px;
+      border-radius: 18px;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.18);
+    }
+    .piano-keys {
+      position: relative;
+      display: flex;
+      height: 170px;
+      max-width: 820px;
+      margin: 0 auto;
+    }
+
+    .white-key {
+      flex: 1;
+      margin: 0 1px;
+      border-radius: 0 0 12px 12px;
+      border: 1px solid #9ca3af;
+      background: linear-gradient(to bottom, #ffffff 0%, #f3f4f6 40%, #e5e7eb 100%);
+      box-shadow: 0 3px 6px rgba(15,23,42,0.25);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #111827;
+      padding-bottom: 6px;
+      cursor: pointer;
+      transition: 0.12s;
+      box-sizing: border-box;
+      position: relative;
+      z-index: 1;
+    }
+    .white-key:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 4px rgba(15,23,42,0.3);
+    }
+
+    .black-key {
+      position: absolute;
+      top: 0;
+      transform: translateX(-50%);
+      width: calc(100% / 14 * 0.9);
+      height: 70%;
+      border-radius: 0 0 10px 10px;
+      background: linear-gradient(to bottom, #111827 0%, #020617 70%);
+      border: 1px solid #020617;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #e5e7eb;
+      padding-bottom: 4px;
+      cursor: pointer;
+      transition: 0.08s;
+      z-index: 2;
+    }
+    .black-key:active {
+      transform: translateX(-50%) translateY(1px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.7);
+    }
+
+    .note-buttons-container {
+      margin-top: 18px;
+      text-align: center;
+    }
+
+    .note-buttons-wrapper {
+      max-width: 920px;
+      margin: 0 auto;
+      background: #d4d4d8;
+      padding: 16px 20px 22px;
+      border-radius: 18px;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.18);
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .note-button {
+      border: none;
+      border-radius: 999px;
+      padding: 12px 18px;
+      min-width: 80px;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(15,23,42,0.4);
+      transition: transform 0.1s, box-shadow 0.1s, filter 0.1s;
+    }
+
+    .note-button:active {
+      transform: translateY(1px);
+      box-shadow: 0 1px 4px rgba(15,23,42,0.4);
+    }
+
+    .note-button:hover {
+      filter: brightness(1.05);
+    }
+
+    .note-button.selected {
+      outline: 3px solid rgba(15,23,42,0.5);
+      box-shadow: 0 0 0 3px rgba(15,23,42,0.25);
+    }
+
+    .btn-do  { background:#ef4444; }
+    .btn-re  { background:#f97316; }
+    .btn-mi  { background:#eab308; }
+    .btn-fa  { background:#22c55e; }
+    .btn-sol { background:#38bdf8; }
+    .btn-la  { background:#a855f7; }
+    .btn-si  { background:#4f46e5; }
+
+    .rainbow-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      backdrop-filter: blur(4px);
+      background: radial-gradient(circle at center,
+        rgba(255,255,255,0.95),
+        rgba(255,255,255,0.85),
+        rgba(230,240,255,0.7));
+    }
+    .rainbow-overlay.active { display:flex; }
+
+    .rainbow-box {
+      background: rgba(255,255,255,0.98);
+      padding: 28px 30px 24px;
+      border-radius: 24px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.18);
+      text-align: center;
+      max-width: 460px;
+    }
+
+    .rainbow-graphic {
+      position:relative;
+      width:320px;
+      height:200px;
+      margin:0 auto 16px;
+    }
+    .rainbow-graphic svg { width:100%;height:100%;overflow:visible; }
+
+    .medal-in-arc {
+      position:absolute;
+      top:56%; left:50%;
+      transform:translate(-50%,-50%);
+      display:flex;
+    }
+
+    .medal-circle {
+      width:140px;height:140px;
+      border-radius:50%;
+      box-shadow:0 6px 16px rgba(0,0,0,0.25);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      position:relative;
+      border-width:4px;
+      border-style:solid;
+    }
+    .medal-circle::after {
+      content:"🏅";
+      position:absolute;
+      top:-22px;
+      font-size:2rem;
+    }
+
+    .medal-circle span {
+      font-size:3.2rem;
+      font-weight:800;
+    }
+
+    #rainbowOverlayL1 .medal-circle {
+      background:radial-gradient(circle at 30% 30%, #fef3c7, #f97316, #7c2d12);
+      border-color:#f97316;
+      color:#4a1f07;
+    }
+
+    #rainbowOverlay .medal-circle {
+      background:radial-gradient(circle at 30% 30%, #f9fafb, #d4d4d8, #4b5563);
+      border-color:#9ca3af;
+      color:#111827;
+    }
+
+    #rainbowOverlayL3 .medal-circle {
+      background:radial-gradient(circle at 30% 30%, #fef9c3, #facc15, #b45309);
+      border-color:#fbbf24;
+      color:#78350f;
+    }
+
+    #finalOverlayL1 .medal-circle,
+    #finalOverlayL2 .medal-circle,
+    #finalOverlayL3 .medal-circle {
+      width:180px;
+      height:180px;
+    }
+
+    #finalOverlayL1 .medal-circle {
+      background:radial-gradient(circle at 30% 30%, #fef3c7, #f97316, #7c2d12);
+      border-color:#f97316;
+      color:#4a1f07;
+    }
+    #finalOverlayL2 .medal-circle {
+      background:radial-gradient(circle at 30% 30%, #f9fafb, #d4d4d8, #4b5563);
+      border-color:#9ca3af;
+      color:#111827;
+    }
+    #finalOverlayL3 .medal-circle {
+      background:radial-gradient(circle at 30% 30%, #fef9c3, #facc15, #b45309);
+      border-color:#fbbf24;
+      color:#78350f;
+    }
+
+    .rainbow-message-main {
+      font-size:1.4rem;
+      font-weight:700;
+      margin-bottom:4px;
+    }
+    .rainbow-message-sub {
+      font-size:1rem;
+      opacity:0.9;
+    }
+
+
+    .home-level-trophy {
+      background: #facc15;
+      color: #78350f;
+      font-size: 1.3rem;
+      padding: 16px 20px;
+      grid-column: span 2;
+    }
+
+    /* Griglia scrigni (8x8) nella pagina trofei */
+    .chest-grid-container {
+      margin-top: 16px;
+      margin-bottom: 12px;
+    }
+
+    .chest-grid {
+      display: grid;
+      grid-template-columns: repeat(8, minmax(0, 1fr));
+      gap: 8px;
+      justify-items: stretch;
+    }
+
+    .chest-btn {
+      border-radius: 12px;
+      padding: 8px 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 3px 8px rgba(15,23,42,0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      min-height: 40px;
+      line-height: 1.1;
+    }
+
+    .chest-btn-filled {
+      background: linear-gradient(to bottom, #facc15, #eab308);
+      color: #78350f;
+    }
+
+    .chest-btn-filled:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 10px rgba(180,83,9,0.45);
+    }
+
+    .chest-btn-filled:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(180,83,9,0.6);
+    }
+
+    .chest-btn-empty {
+      background: #f3f4f6;
+      color: #9ca3af;
+      box-shadow: none;
+      cursor: default;
+    }
+
+    .clear-chests-btn {
+      margin-top: 12px;
+      margin-bottom: 8px;
+      padding: 10px 18px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 800;
+      font-size: 1rem;
+      color: #f9fafb;
+      background: #ef4444;
+      box-shadow: 0 4px 10px rgba(127,29,29,0.4);
+      cursor: pointer;
+      transition: 0.15s;
+    }
+
+    .clear-chests-btn:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .clear-chests-btn:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(127,29,29,0.5);
+    }
+
+
+    /* ===========================
+       PAGINA TROFEI
+       =========================== */
+    #trophyPage .app {
+      max-width: 800px;
+    }
+
+    .trophy-main {
+      text-align: center;
+      padding: 16px 8px 8px;
+    }
+
+    .trophy-chest {
+      border: none;
+      border-radius: 24px;
+      padding: 18px 24px;
+      background: linear-gradient(to bottom, #facc15, #eab308);
+      color: #78350f;
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(180,83,9,0.45);
+      transition: 0.15s;
+      min-width: 260px;
+    }
+
+    .trophy-chest:hover {
+      filter: brightness(1.05);
+      transform: translateY(-1px);
+    }
+
+    .trophy-chest:active {
+      transform: translateY(1px);
+      box-shadow: 0 3px 8px rgba(180,83,9,0.6);
+    }
+
+    .trophy-chest-emoji {
+      font-size: 2.4rem;
+    }
+
+    .trophy-chest.opened .trophy-chest-emoji {
+      transform: translateY(2px);
+    }
+
+    .trophy-content {
+      margin-top: 24px;
+      text-align: left;
+      max-width: 640px;
+      margin-left: auto;
+      margin-right: auto;
+      padding: 16px 18px 8px;
+      border-radius: 20px;
+      border: 2px solid #e0e3f0;
+      background: #f9fafb;
+    }
+
+    .trophy-section {
+      margin-bottom: 16px;
+    }
+
+    .trophy-section h2 {
+      font-size: 1.1rem;
+      margin: 0 0 6px;
+      color: #111827;
+    }
+
+    .trophy-medals-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      min-height: 34px;
+    }
+
+    .trophy-empty {
+      font-size: 0.95rem;
+      color: #6b7280;
+      font-style: italic;
+    }
+
+    .trophy-note {
+      margin-top: 8px;
+      font-size: 0.85rem;
+      color: #6b7280;
+      text-align: center;
+    }
+
+  
+    /* Auto toggle più grande nel Livello 1 */
+    #level1Page .auto-toggle {
+      font-size: 1.1rem;
+      gap: 8px;
+    }
+
+    #level1Page .auto-slider {
+      width: 60px;
+      height: 30px;
+    }
+
+    #level1Page .auto-slider::before {
+      width: 24px;
+      height: 24px;
+      top: 3px;
+      left: 3px;
+    }
+
+    #level1Page .auto-toggle-input:checked + .auto-slider::before {
+      transform: translateX(30px);
+    }
+
+    /* ===========================
+       ADATTAMENTI iPHONE LANDSCAPE
+       =========================== */
+    @media (orientation: landscape) and (max-height: 500px) {
+      html, body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      .home-screen {
+        padding: 0 env(safe-area-inset-left) 0 env(safe-area-inset-right);
+      }
+
+      .home-container {
+        max-width: 720px;
+        display: grid;
+        grid-template-columns: 1.1fr 1.4fr;
+        align-items: center;
+        gap: 24px;
+        padding: 24px 24px 28px;
+        text-align: left;
+      }
+
+      .home-rainbow-graphic {
+        margin: 0;
+        width: 260px;
+        height: 180px;
+        justify-self: center;
+      }
+
+      .home-title,
+      .home-subtitle {
+        text-align: left;
+      }
+
+      .home-player-box {
+        margin-bottom: 16px;
+      }
+
+      .home-levels {
+        max-width: 100%;
+      }
+
+      .page-container {
+        align-items: center;
+      }
+
+      .app {
+        margin: 12px auto;
+        padding: 16px 18px 18px;
+        max-width: 960px;
+      }
+
+      .staff-container {
+        margin-top: 8px;
+        margin-bottom: 8px;
+      }
+
+      svg.staff {
+        max-height: 210px;
+      }
+
+      .piano-keys {
+        height: 140px;
+      }
+
+      .keyboard-container {
+        margin-top: 10px;
+      }
+
+      .trophy-main {
+        padding-top: 8px;
+      }
+    }
+
+</style>
+</head>
+
+<body>
+
+<!-- ===========================
+     HOME
+     =========================== -->
+<div id="homeScreen" class="home-screen">
+  <div class="home-container">
+    <div class="home-rainbow-graphic">
+      <svg viewBox="0 0 300 180" aria-hidden="true">
+        <path d="M30 150 Q150 20 270 150" stroke="#ef4444" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M40 150 Q150 30 260 150" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M50 150 Q150 40 250 150" stroke="#eab308" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M60 150 Q150 50 240 150" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M70 150 Q150 60 230 150" stroke="#38bdf8" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M80 150 Q150 70 220 150" stroke="#a855f7" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <button id="audioResetBtn" class="home-level-btn home-audio-reset" type="button">
+      Reset audio 🔊
+    </button>
+
+    <div class="home-title">Music Rainbow</div>
+    <div class="home-subtitle">Scegli il livello e inserisci il tuo nome</div>
+
+    <div class="home-player-box">
+      <div class="home-player-label">Il tuo nome</div>
+      <input id="playerNameInput" class="home-player-input" type="text" placeholder="Scrivi il tuo nome..." />
+
+      <div class="home-player-label">Sei maschio o femmina?</div>
+      <div class="home-gender-select">
+        <label class="home-gender-option">
+          <input type="radio" name="gender" value="M" checked />
+          <span>Maschio</span>
+        </label>
+        <label class="home-gender-option">
+          <input type="radio" name="gender" value="F" />
+          <span>Femmina</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="home-levels">
+      <button id="btnLevel1" class="home-level-btn home-level-1" type="button">
+        Primo livello
+      </button>
+      <button id="btnLevel2" class="home-level-btn home-level-2" type="button">
+        Secondo livello
+      </button>
+      <button id="btnLevel3" class="home-level-btn home-level-3" type="button">
+        Terzo livello
+      </button>
+      <button id="btnPlay" class="home-level-btn home-level-play" type="button">
+        Modalità Play
+      </button>
+      <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
+        Scrigno dei trofei
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===========================
+     POPUP PREMI NORMALI
+     =========================== -->
+<div class="rainbow-overlay" id="rainbowOverlayL1">
+  <div class="rainbow-box">
+    <div class="rainbow-graphic">
+      <svg viewBox="0 0 300 180">
+        <path d="M30 150 Q150 20 270 150" stroke="#ef4444" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M40 150 Q150 30 260 150" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M50 150 Q150 40 250 150" stroke="#eab308" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M60 150 Q150 50 240 150" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M70 150 Q150 60 230 150" stroke="#38bdf8" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M80 150 Q150 70 220 150" stroke="#a855f7" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="medal-in-arc">
+        <div class="medal-circle">
+          <span id="rainbowWinIndexL1">1</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="rainbowOverlayL1Main" class="rainbow-message-main">Che bravura!</div>
+    <div id="rainbowOverlayL1Sub" class="rainbow-message-sub">Hai colorato tutte le note. Ora ascolta la tua melodia.</div>
+  </div>
+</div>
+
+<div class="rainbow-overlay" id="rainbowOverlay">
+  <div class="rainbow-box">
+    <div class="rainbow-graphic">
+      <svg viewBox="0 0 300 180">
+        <path d="M30 150 Q150 20 270 150" stroke="#ef4444" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M40 150 Q150 30 260 150" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M50 150 Q150 40 250 150" stroke="#eab308" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M60 150 Q150 50 240 150" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M70 150 Q150 60 230 150" stroke="#38bdf8" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M80 150 Q150 70 220 150" stroke="#a855f7" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="medal-in-arc">
+        <div class="medal-circle">
+          <span id="rainbowWinIndex">1</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="rainbowOverlayL2Main" class="rainbow-message-main">Grande musica!</div>
+    <div id="rainbowOverlayL2Sub" class="rainbow-message-sub">Hai indovinato tutte le note. Ora ascolta la melodia.</div>
+  </div>
+</div>
+
+<div class="rainbow-overlay" id="rainbowOverlayL3">
+  <div class="rainbow-box">
+    <div class="rainbow-graphic">
+      <svg viewBox="0 0 300 180">
+        <path d="M30 150 Q150 20 270 150" stroke="#ef4444" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M40 150 Q150 30 260 150" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M50 150 Q150 40 250 150" stroke="#eab308" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M60 150 Q150 50 240 150" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M70 150 Q150 60 230 150" stroke="#38bdf8" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M80 150 Q150 70 220 150" stroke="#a855f7" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="medal-in-arc">
+        <div class="medal-circle">
+          <span id="rainbowWinIndexL3">1</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="rainbowOverlayL3Main" class="rainbow-message-main">Che orecchio musicale!</div>
+    <div id="rainbowOverlayL3Sub" class="rainbow-message-sub">Hai riconosciuto tutte le note. Ora ascolta la melodia.</div>
+  </div>
+</div>
+
+<!-- ===========================
+     POPUP FINALI (10 MEDAGLIE)
+     =========================== -->
+<div class="rainbow-overlay" id="finalOverlayL1">
+  <div class="rainbow-box">
+    <div class="rainbow-graphic">
+      <svg viewBox="0 0 300 180">
+        <path d="M30 150 Q150 20 270 150" stroke="#ef4444" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M40 150 Q150 30 260 150" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M50 150 Q150 40 250 150" stroke="#eab308" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M60 150 Q150 50 240 150" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M70 150 Q150 60 230 150" stroke="#38bdf8" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M80 150 Q150 70 220 150" stroke="#a855f7" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="medal-in-arc">
+        <div class="medal-circle">
+          <span>10</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="finalOverlayL1Main" class="rainbow-message-main">Livello 1 completato!</div>
+    <div id="finalOverlayL1Sub" class="rainbow-message-sub">
+      Hai vinto 10 medaglie di rame. Ora passi al secondo livello!
+    </div>
+  </div>
+</div>
+
+<div class="rainbow-overlay" id="finalOverlayL2">
+  <div class="rainbow-box">
+    <div class="rainbow-graphic">
+      <svg viewBox="0 0 300 180">
+        <path d="M30 150 Q150 20 270 150" stroke="#ef4444" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M40 150 Q150 30 260 150" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M50 150 Q150 40 250 150" stroke="#eab308" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M60 150 Q150 50 240 150" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M70 150 Q150 60 230 150" stroke="#38bdf8" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M80 150 Q150 70 220 150" stroke="#a855f7" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="medal-in-arc">
+        <div class="medal-circle">
+          <span>10</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="finalOverlayL2Main" class="rainbow-message-main">Livello 2 completato!</div>
+    <div id="finalOverlayL2Sub" class="rainbow-message-sub">
+      Hai vinto 10 medaglie d’argento. Ora passi al terzo livello!
+    </div>
+  </div>
+</div>
+
+<div class="rainbow-overlay" id="finalOverlayL3">
+  <div class="rainbow-box">
+    <div class="rainbow-graphic">
+      <svg viewBox="0 0 300 180">
+        <path d="M30 150 Q150 20 270 150" stroke="#ef4444" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M40 150 Q150 30 260 150" stroke="#f97316" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M50 150 Q150 40 250 150" stroke="#eab308" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M60 150 Q150 50 240 150" stroke="#22c55e" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M70 150 Q150 60 230 150" stroke="#38bdf8" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M80 150 Q150 70 220 150" stroke="#a855f7" stroke-width="18" fill="none" stroke-linecap="round"/>
+        <path d="M90 150 Q150 80 210 150" stroke="#4f46e5" stroke-width="18" fill="none" stroke-linecap="round"/>
+      </svg>
+
+      <div class="medal-in-arc">
+        <div class="medal-circle">
+          <span>10</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="finalOverlayL3Main" class="rainbow-message-main">Tutti i livelli completati!</div>
+    <div id="finalOverlayL3Sub" class="rainbow-message-sub">
+      Hai vinto 10 medaglie d’oro. Puoi continuare a giocare quanto vuoi!
+    </div>
+  </div>
+</div>
+
+<!-- ===========================
+     LIVELLO 1
+     =========================== -->
+<div id="level1Page" class="page-container" style="display:none">
+  <div class="app">
+    <div class="top-panel">
+      <div class="top-row">
+        <div class="top-left-controls">
+          <button class="reset-btn" id="resetBtnL1" aria-label="Reset">↻</button>
+          <button class="menu-btn" id="menuBtnL1" aria-label="Menu">🏠</button>
+          <button class="hint-btn" id="hintBtnL1" aria-label="Suggerimento">💡</button>
+          <button class="trophy-btn" id="trophyBtnL1" aria-label="Trofei">🏆</button>
+        </div>
+        <h1 class="rainbow-title">
+          <span>M</span><span>u</span><span>s</span><span>i</span><span>c</span>
+          <span>&nbsp;</span>
+          <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
+        </h1>
+        <div class="top-right-controls">
+          <label class="auto-toggle">
+            <span class="auto-label">Auto</span>
+            <input type="checkbox" id="autoColorToggleL1" class="auto-toggle-input">
+            <span class="auto-slider"></span>
+          </label>
+          <div class="rainbow-counter"> 🌈 <span id="rainbowCountL1">0</span> </div>
+        </div>
+      </div>
+      <div class="medals-panel-container">
+        <div class="medals-panel" id="medalsPanelL1"></div>
+      </div>
+    </div>
+
+    <div class="staff-container">
+      <svg id="staffSvgL1" class="staff" viewBox="0 0 820 260">
+        <defs>
+          <linearGradient id="rainbowStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ef4444"/>
+            <stop offset="16%" stop-color="#f97316"/>
+            <stop offset="32%" stop-color="#eab308"/>
+            <stop offset="48%" stop-color="#22c55e"/>
+            <stop offset="64%" stop-color="#38bdf8"/>
+            <stop offset="80%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#4f46e5"/>
+          </linearGradient>
+          <filter id="rainbowGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <line x1="150" y1="120" x2="790" y2="120" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="140" x2="790" y2="140" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
+        <text x="88" y="195" font-size="150">&#119070;</text>
+      </svg>
+      <div class="status-bar" id="statusBarL1"></div>
+    </div>
+
+    <div class="note-buttons-container">
+      <div class="note-buttons-wrapper">
+        <button class="note-button btn-do"  data-note="do">DO</button>
+        <button class="note-button btn-re"  data-note="re">RE</button>
+        <button class="note-button btn-mi"  data-note="mi">MI</button>
+        <button class="note-button btn-fa"  data-note="fa">FA</button>
+        <button class="note-button btn-sol" data-note="sol">SOL</button>
+        <button class="note-button btn-la"  data-note="la">LA</button>
+        <button class="note-button btn-si"  data-note="si">SI</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===========================
+     LIVELLO 2
+     =========================== -->
+<div id="level2Page" class="page-container">
+  <div class="app">
+    <div class="top-panel">
+      <div class="top-row">
+        <div class="top-left-controls">
+          <button class="reset-btn" id="resetBtn" aria-label="Reset">↻</button>
+          <button class="menu-btn" id="menuBtnL2" aria-label="Menu">🏠</button>
+          <button class="trophy-btn" id="trophyBtnL2" aria-label="Trofei">🏆</button>
+        </div>
+        <h1 class="rainbow-title">
+          <span>M</span><span>u</span><span>s</span><span>i</span><span>c</span>
+          <span>&nbsp;</span>
+          <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
+        </h1>
+        <div class="top-right-controls">
+          <div class="rainbow-counter"> 🌈 <span id="rainbowCount">0</span> </div>
+        </div>
+      </div>
+      <div class="medals-panel-container">
+        <div class="medals-panel" id="medalsPanel"></div>
+      </div>
+    </div>
+
+    <div class="staff-container">
+      <svg id="staffSvg" class="staff" viewBox="0 0 820 260">
+        <defs>
+          <linearGradient id="rainbowStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ef4444"/>
+            <stop offset="16%" stop-color="#f97316"/>
+            <stop offset="32%" stop-color="#eab308"/>
+            <stop offset="48%" stop-color="#22c55e"/>
+            <stop offset="64%" stop-color="#38bdf8"/>
+            <stop offset="80%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#4f46e5"/>
+          </linearGradient>
+          <filter id="rainbowGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <line x1="150" y1="120" x2="790" y2="120" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="140" x2="790" y2="140" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
+        <text x="88" y="195" font-size="150">&#119070;</text>
+      </svg>
+      <div class="status-bar" id="statusBar"></div>
+    </div>
+
+    <div class="keyboard-container">
+      <div class="piano">
+        <div class="piano-keys" id="pianoKeys"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===========================
+     LIVELLO 3
+     =========================== -->
+<div id="level3Page" class="page-container" style="display:none">
+  <div class="app">
+    <div class="top-panel">
+      <div class="top-row">
+        <div class="top-left-controls">
+          <button class="reset-btn" id="resetBtnL3" aria-label="Reset">↻</button>
+          <button class="menu-btn" id="menuBtnL3" aria-label="Menu">🏠</button>
+          <button class="trophy-btn" id="trophyBtnL3" aria-label="Trofei">🏆</button>
+        </div>
+        <h1 class="rainbow-title">
+          <span>M</span><span>u</span><span>s</span><span>i</span><span>c</span>
+          <span>&nbsp;</span>
+          <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
+        </h1>
+        <div class="top-right-controls">
+          <div class="rainbow-counter"> 🌈 <span id="rainbowCountL3">0</span> </div>
+        </div>
+      </div>
+      <div class="medals-panel-container">
+        <div class="medals-panel" id="medalsPanelL3"></div>
+      </div>
+    </div>
+
+    <div class="staff-container">
+      <svg id="staffSvgL3" class="staff" viewBox="0 0 820 260">
+        <defs>
+          <linearGradient id="rainbowStroke" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="#ef4444"/>
+            <stop offset="16%" stop-color="#f97316"/>
+            <stop offset="32%" stop-color="#eab308"/>
+            <stop offset="48%" stop-color="#22c55e"/>
+            <stop offset="64%" stop-color="#38bdf8"/>
+            <stop offset="80%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#4f46e5"/>
+          </linearGradient>
+          <filter id="rainbowGlow" x="-80%" y="-80%" width="260%" height="260%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+
+        <line x1="150" y1="120" x2="790" y2="120" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="140" x2="790" y2="140" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
+        <text x="88" y="195" font-size="150">&#119070;</text>
+      </svg>
+      <div class="status-bar" id="statusBarL3"></div>
+    </div>
+
+    <div class="keyboard-container">
+      <div class="piano">
+        <div class="piano-keys" id="pianoKeysL3"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===========================
+     PAGINA PLAY
+     =========================== -->
+<div id="playPage" class="page-container" style="display:none">
+  <div class="app">
+    <div class="top-panel">
+      <div class="top-row">
+        <div class="top-left-controls">
+          <button class="reset-btn" id="resetBtnPlay" aria-label="Reset">↻</button>
+          <button class="menu-btn" id="menuBtnPlay" aria-label="Menu">🏠</button>
+          <button class="trophy-btn" id="trophyBtnPlay" aria-label="Trofei">🏆</button>
+        </div>
+        <h1 class="rainbow-title">
+          <span>M</span><span>u</span><span>s</span><span>i</span><span>c</span>
+          <span>&nbsp;</span>
+          <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
+        </h1>
+        <div class="top-right-controls">
+          <div class="rainbow-counter"> 🌈 <span id="rainbowCountPlay">0</span> </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="staff-container">
+      <svg id="staffSvgPlay" class="staff" viewBox="0 0 820 260">
+        <line x1="150" y1="120" x2="790" y2="120" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="140" x2="790" y2="140" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="160" x2="790" y2="160" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="180" x2="790" y2="180" stroke="#111827" stroke-width="2"/>
+        <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
+        <text x="88" y="195" font-size="150">&#119070;</text>
+      </svg>
+    </div>
+
+    <div class="keyboard-container">
+      <div class="piano">
+        <div class="piano-keys" id="pianoKeysPlay"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===========================
+     PAGINA TROFEI
+     =========================== -->
+
+<div id="trophyPage" class="page-container" style="display:none">
+  <div class="app">
+    <div class="top-panel">
+      <div class="top-row">
+        <div class="top-left-controls">
+          <button class="menu-btn" id="trophyBackBtn">⏪</button>
+          <button class="menu-btn" id="trophyHomeBtn">🏠</button>
+        </div>
+        <h1 class="rainbow-title">
+          <span>S</span><span>c</span><span>r</span><span>i</span><span>g</span><span>n</span><span>o</span>
+          <span>&nbsp;</span>
+          <span>d</span><span>e</span><span>i</span>
+          <span>&nbsp;</span>
+          <span>T</span><span>r</span><span>o</span><span>f</span><span>e</span><span>i</span>
+        </h1>
+        <div class="top-right-controls"></div>
+      </div>
+    </div>
+
+    <div class="trophy-main">
+      <div class="chest-grid-container">
+        <div id="chestGrid" class="chest-grid"></div>
+      </div>
+
+      <button id="clearChestsBtn" class="clear-chests-btn" type="button">
+        Cancella tutti gli scrigni
+      </button>
+
+      <div id="trophyContent" class="trophy-content" style="display:none"></div>
+
+      <div class="trophy-note">
+        Ogni scrigno giallo raccoglie le medaglie di una sessione di gioco.<br/>
+        Tocca uno scrigno per vedere le medaglie di quella sessione.
+      </div>
+    </div>
+  </div>
+</div>
+
+  </div>
+</div>
+
+<script>
+/* ===========================
+   COSTANTI COMUNI
+   =========================== */
+
+const NOTES = [
+  { name: "do",  color: "#ef4444" },
+  { name: "re",  color: "#f97316" },
+  { name: "mi",  color: "#eab308" },
+  { name: "fa",  color: "#22c55e" },
+  { name: "sol", color: "#38bdf8" },
+  { name: "la",  color: "#a855f7" },
+  { name: "si",  color: "#4f46e5" }
+];
+
+const NOTE_FREQS = {
+  "do": 261.63,
+  "re": 293.66,
+  "mi": 329.63,
+  "fa": 349.23,
+  "sol": 392.00,
+  "la": 440.00,
+  "si": 493.88,
+  "do#": 277.18, "re#": 311.13, "fa#": 369.99, "sol#": 415.30, "la#": 466.16
+};
+
+const STAFF_CORE_POSITIONS = [
+  { y:200, noteName:"mi",  octave:1 },
+  { y:190, noteName:"fa",  octave:1 },
+  { y:180, noteName:"sol", octave:1 },
+  { y:170, noteName:"la",  octave:1 },
+  { y:160, noteName:"si",  octave:1 },
+  { y:150, noteName:"do",  octave:2 },
+  { y:140, noteName:"re",  octave:2 },
+  { y:130, noteName:"mi",  octave:2 },
+  { y:120, noteName:"fa",  octave:2 }
+];
+
+const STAFF_LEDGER_LOW = [
+  { y:210, noteName:"re", octave:1 },
+  { y:220, noteName:"do", octave:1 }
+];
+
+const STAFF_LEDGER_HIGH = [
+  { y:110, noteName:"sol", octave:2 },
+  { y:100, noteName:"la",  octave:2 }
+];
+
+const MELODY_STEP_MS = 250;
+
+const AudioContextWeb = window.AudioContext || window.webkitAudioContext;
+let audioCtx = null;
+let audioUnlocked = false;
+let hasPlayedHomeJingle = false;
+
+function getAudioCtx() {
+  // Crea o ricrea il contesto se non esiste o è stato chiuso
+  if (!audioCtx || audioCtx.state === "closed") {
+    audioCtx = new AudioContextWeb();
+  }
+  return audioCtx;
+}
+
+// Sblocco esplicito per Safari / iOS: viene chiamato al primo tap/click
+function unlockAudioOnce() {
+  if (audioUnlocked) return;
+  const ctx = getAudioCtx();
+  if (ctx.state === "suspended") {
+    ctx.resume().catch(() => {});
+  }
+  audioUnlocked = true;
+}
+
+// Agganciamo l’unlock al primo gesto dell’utente
+window.addEventListener("touchstart", unlockAudioOnce, { once: true });
+window.addEventListener("mousedown", unlockAudioOnce, { once: true });
+window.addEventListener("pointerdown", unlockAudioOnce, { once: true });
+
+
+function hardResetAudio() {
+  try {
+    if (audioCtx && audioCtx.state !== "closed") {
+      audioCtx.close();
+    }
+  } catch (e) {
+    // ignore
+  }
+
+  audioCtx = null;
+  audioUnlocked = false;
+
+  try {
+    unlockAudioOnce();
+  } catch (e) {
+    // ignore
+  }
+
+  alert("Audio reimpostato! Se non senti ancora i suoni, prova a toccare di nuovo lo schermo.");
+}
+
+function playTone(freq) {
+  const ctx = getAudioCtx();
+  if (!ctx) return;
+
+  const doPlay = () => {
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.frequency.value = freq;
+    o.type = "sine";
+    o.connect(g);
+    g.connect(ctx.destination);
+    const now = ctx.currentTime;
+    g.gain.setValueAtTime(0.4, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.5);
+    o.start(now);
+    o.stop(now + 0.5);
+  };
+
+  if (ctx.state === "suspended" && typeof ctx.resume === "function") {
+    try {
+      const resumeResult = ctx.resume();
+      if (resumeResult && typeof resumeResult.then === "function") {
+        resumeResult.then(doPlay).catch(doPlay);
+      } else {
+        // resume non restituisce una Promise: proviamo comunque a suonare
+        doPlay();
+      }
+    } catch (e) {
+      // in caso di errore, proviamo comunque a suonare
+      doPlay();
+    }
+  } else {
+    doPlay();
+  }
+}
+
+function playHomeJingle() {
+  // Scala semplice da do basso a do alto con lo stesso suono della tastiera
+  try {
+    const baseDo = NOTE_FREQS["do"] || 261.63;
+    const notes = [
+      { name: "do", octave: 1 },
+      { name: "re", octave: 1 },
+      { name: "mi", octave: 1 },
+      { name: "fa", octave: 1 },
+      { name: "sol", octave: 1 },
+      { name: "la", octave: 1 },
+      { name: "si", octave: 1 },
+      { name: "do", octave: 2 }
+    ];
+    let delay = 0;
+    const step = 220;
+
+    notes.forEach(n => {
+      const base = NOTE_FREQS[n.name] || baseDo;
+      let freq = base;
+      if (n.octave === 1) freq = base / 2;
+      if (n.octave === 2) freq = base * 1;
+      setTimeout(() => {
+        if (audioUnlocked) {
+          playTone(freq);
+        }
+      }, delay);
+      delay += step;
+    });
+  } catch (e) {
+    // se qualcosa va storto, ignoriamo la musichetta
+  }
+}
+
+
+function playError() { playTone(150); }
+
+function getNoteColor(noteName) {
+  const base = noteName.replace("#","");
+  return (NOTES.find(n => n.name === base) || {color:"#ffffff"}).color;
+}
+
+function setStatusBar(el, levelLabel, notes, errors, threshold) {
+  if (!el) return;
+  const errorsClass = errors >= threshold ? "stat-errors-high" : "stat-errors-normal";
+  el.innerHTML = `
+    <div class="status-pills">
+      <div class="stat-pill stat-notes">Note: ${notes}</div>
+      <div class="stat-pill ${errorsClass}">Errori: ${errors}</div>
+    </div>
+  `;
+}
+
+function getStaffY(noteName, octave) {
+  const pool = STAFF_CORE_POSITIONS.concat(STAFF_LEDGER_LOW, STAFF_LEDGER_HIGH);
+  const found = pool.find(p => p.noteName === noteName && p.octave === octave);
+  return found ? found.y : null;
+}
+
+/* ===========================
+   GIOCATORE (nome + genere)
+   =========================== */
+let playerName = "";
+let playerGender = "M";
+
+function getNameFragment() {
+  return playerName ? " " + playerName : "";
+}
+
+function setNormalOverlayTexts(level) {
+  const nameFrag = getNameFragment();
+  const g = playerGender;
+
+  if (level === 1) {
+    const mainEl = document.getElementById("rainbowOverlayL1Main");
+    const subEl  = document.getElementById("rainbowOverlayL1Sub");
+    if (!mainEl || !subEl) return;
+    mainEl.textContent = (g === "F" ? "Brava" : "Bravo") + nameFrag + "!";
+    subEl.textContent = "Hai colorato tutte le note. Ora ascolta la tua melodia.";
+  } else if (level === 2) {
+    const mainEl = document.getElementById("rainbowOverlayL2Main");
+    const subEl  = document.getElementById("rainbowOverlayL2Sub");
+    if (!mainEl || !subEl) return;
+    mainEl.textContent = (g === "F" ? "Brava" : "Bravo") + nameFrag + ", che orecchio!";
+    subEl.textContent = "Hai indovinato tutte le note. Ora ascolta la melodia.";
+  } else if (level === 3) {
+    const mainEl = document.getElementById("rainbowOverlayL3Main");
+    const subEl  = document.getElementById("rainbowOverlayL3Sub");
+    if (!mainEl || !subEl) return;
+    mainEl.textContent = (g === "F" ? "Brava" : "Bravo") + nameFrag + ", che memoria musicale!";
+    subEl.textContent = "Hai riconosciuto tutte le note. Ora ascolta la melodia.";
+  }
+}
+
+function setFinalOverlayTexts(level) {
+  const nameFrag = getNameFragment();
+  const g = playerGender;
+
+  if (level === 1) {
+    const mainEl = document.getElementById("finalOverlayL1Main");
+    const subEl  = document.getElementById("finalOverlayL1Sub");
+    if (!mainEl || !subEl) return;
+    mainEl.textContent = "Livello 1 completato!";
+    subEl.textContent = (g === "F"
+      ? "Brava" + nameFrag + "! Hai vinto 10 medaglie di rame. Ora passi al secondo livello!"
+      : "Bravo" + nameFrag + "! Hai vinto 10 medaglie di rame. Ora passi al secondo livello!");
+  } else if (level === 2) {
+    const mainEl = document.getElementById("finalOverlayL2Main");
+    const subEl  = document.getElementById("finalOverlayL2Sub");
+    if (!mainEl || !subEl) return;
+    mainEl.textContent = "Livello 2 completato!";
+    subEl.textContent = (g === "F"
+      ? "Brava" + nameFrag + "! Hai vinto 10 medaglie d’argento. Ora passi al terzo livello!"
+      : "Bravo" + nameFrag + "! Hai vinto 10 medaglie d’argento. Ora passi al terzo livello!");
+  } else if (level === 3) {
+    const mainEl = document.getElementById("finalOverlayL3Main");
+    const subEl  = document.getElementById("finalOverlayL3Sub");
+    if (!mainEl || !subEl) return;
+    mainEl.textContent = "Tutti i livelli completati!";
+    subEl.textContent = (g === "F"
+      ? "Brava" + nameFrag + "! Hai vinto 10 medaglie d’oro. Puoi continuare a giocare quanto vuoi!"
+      : "Bravo" + nameFrag + "! Hai vinto 10 medaglie d’oro. Puoi continuare a giocare quanto vuoi!");
+  }
+}
+
+/* ===========================
+   VARIABILI GLOBALI TROFEI
+   =========================== */
+/* ===========================
+   SCRIGNI DI SESSIONE (LOCALSTORAGE)
+   =========================== */
+const SESSIONS_KEY = "musicRainbowChests";
+let sessions = [];
+let currentSessionId = null;
+
+const CHEST_COUNTER_KEY = "musicRainbowChestCounter";
+let lastChestNumber = 0;
+
+function loadSessionsFromStorage() {
+  try {
+    const raw = localStorage.getItem(SESSIONS_KEY);
+    if (!raw) {
+      sessions = [];
+    } else {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        sessions = parsed;
+      } else {
+        sessions = [];
+      }
+    }
+
+    // Carica il contatore globale degli scrigni
+    const rawCounter = localStorage.getItem(CHEST_COUNTER_KEY);
+    if (rawCounter) {
+      const parsedCounter = parseInt(rawCounter, 10);
+      if (!isNaN(parsedCounter) && parsedCounter > 0) {
+        lastChestNumber = parsedCounter;
+      }
+    }
+
+    // Assegna numeri sequenziali agli scrigni non vuoti che non hanno ancora un numero di visualizzazione
+    const nonEmptyWithoutNumber = sessions
+      .filter(s => ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0 && typeof s.displayNumber !== "number")
+      .sort((a, b) => a.id - b.id);
+
+    nonEmptyWithoutNumber.forEach(s => {
+      lastChestNumber++;
+      s.displayNumber = lastChestNumber;
+    });
+
+  } catch (e) {
+    console.warn("Errore nel leggere gli scrigni:", e);
+    sessions = [];
+    lastChestNumber = 0;
+  }
+}
+
+function saveSessionsToStorage() {
+  try {
+    localStorage.setItem(SESSIONS_KEY, JSON.stringify(sessions));
+    localStorage.setItem(CHEST_COUNTER_KEY, String(lastChestNumber || 0));
+  } catch (e) {
+    console.warn("Errore nel salvare gli scrigni:", e);
+  }
+}
+
+function startNewSessionChest() {
+  // Crea sempre una nuova sessione quando si parte a giocare da Home
+  const nextId = sessions.length ? (sessions[sessions.length - 1].id + 1) : 1;
+  const newSession = {
+    id: nextId,
+    createdAt: Date.now(),
+    bronze: 0,
+    silver: 0,
+    gold: 0
+  };
+  sessions.push(newSession);
+  saveSessionsToStorage();
+  currentSessionId = newSession.id;
+}
+
+function getCurrentSessionChest() {
+  if (!currentSessionId) return null;
+  return sessions.find(s => s.id === currentSessionId) || null;
+}
+
+function incrementSessionMedal(type) {
+  if (!currentSessionId) return;
+  const s = sessions.find(sess => sess.id === currentSessionId);
+  if (!s) return;
+
+  const hadMedalsBefore =
+    ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0;
+
+  if (type === "bronze") {
+    s.bronze = (s.bronze || 0) + 1;
+  } else if (type === "silver") {
+    s.silver = (s.silver || 0) + 1;
+  } else if (type === "gold") {
+    s.gold = (s.gold || 0) + 1;
+  }
+
+  const hasMedalsNow =
+    ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0;
+
+  if (!hadMedalsBefore && hasMedalsNow && typeof s.displayNumber !== "number") {
+    lastChestNumber++;
+    s.displayNumber = lastChestNumber;
+  }
+
+  saveSessionsToStorage();
+}
+
+function clearAllSessionChests() {
+  sessions = [];
+  currentSessionId = null;
+  lastChestNumber = 0;
+  try {
+    localStorage.removeItem(SESSIONS_KEY);
+    localStorage.removeItem(CHEST_COUNTER_KEY);
+  } catch (e) {
+    console.warn("Errore nel cancellare gli scrigni:", e);
+  }
+}
+
+let totalBronze = 0;
+let totalSilver = 0;
+let totalGold   = 0;
+
+const rainbowCountElL1   = document.getElementById("rainbowCountL1");
+const rainbowCountEl     = document.getElementById("rainbowCount");
+const rainbowCountElL3   = document.getElementById("rainbowCountL3");
+const rainbowCountElPlay = document.getElementById("rainbowCountPlay");
+
+function getTotalMedalsCount() {
+  return totalBronze + totalSilver + totalGold;
+}
+
+function updateRainbowCountersGlobal() {
+  const total = getTotalMedalsCount();
+  if (rainbowCountElL1)   rainbowCountElL1.textContent   = total;
+  if (rainbowCountEl)     rainbowCountEl.textContent     = total;
+  if (rainbowCountElL3)   rainbowCountElL3.textContent   = total;
+  if (rainbowCountElPlay) rainbowCountElPlay.textContent = total;
+}
+
+/* ===========================
+   LIVELLO 1
+   =========================== */
+
+const staffSvgL1    = document.getElementById("staffSvgL1");
+const statusBarElL1 = document.getElementById("statusBarL1");
+const resetBtnL1    = document.getElementById("resetBtnL1");
+const rainbowWinIndexL1 = document.getElementById("rainbowWinIndexL1");
+const medalsPanelL1  = document.getElementById("medalsPanelL1");
+const rainbowOverlayL1 = document.getElementById("rainbowOverlayL1");
+const finalOverlayL1 = document.getElementById("finalOverlayL1");
+const noteButtonsL1 = document.querySelectorAll(".note-button");
+const level1PageEl  = document.getElementById("level1Page");
+const level2PageEl  = document.getElementById("level2Page");
+const level3PageEl  = document.getElementById("level3Page");
+const playPageEl    = document.getElementById("playPage");
+const trophyPageEl  = document.getElementById("trophyPage");
+const autoColorToggleL1 = document.getElementById("autoColorToggleL1");
+
+let currentNotesL1 = [];
+let currentIndexL1 = 0;
+let rainbowsL1 = 0;
+let consecutiveErrorsL1 = 0;
+let selectedColorL1 = null;
+let autoColorL1 = false;
+
+/* Suggerimento L1 */
+let hintCircleL1 = null;
+let hintTimeoutL1 = null;
+let hintCountL1 = 0;
+const MAX_HINTS_L1 = 3;
+let hintBtnL1El = null;
+
+function clearHintL1() {
+  if (hintCircleL1) {
+    hintCircleL1.remove();
+    hintCircleL1 = null;
+  }
+  if (hintTimeoutL1) {
+    clearTimeout(hintTimeoutL1);
+    hintTimeoutL1 = null;
+  }
+}
+
+function showHintL1() {
+  if (!staffSvgL1 || !currentNotesL1.length) return;
+  if (currentIndexL1 >= currentNotesL1.length) return;
+  const target = currentNotesL1[currentIndexL1];
+  clearHintL1();
+  const cx = 140;
+  const cy = target.cy;
+  const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+  circle.setAttribute("cx", cx);
+  circle.setAttribute("cy", cy);
+  circle.setAttribute("r", 10);
+  circle.classList.add("hint-circle");
+  circle.style.fill = getNoteColor(target.noteName);
+  staffSvgL1.appendChild(circle);
+  hintCircleL1 = circle;
+  hintTimeoutL1 = setTimeout(clearHintL1, 3000);
+}
+
+function updateHintLabelL1() {
+  if (!hintBtnL1El) return;
+  const remaining = Math.max(0, MAX_HINTS_L1 - hintCountL1);
+  hintBtnL1El.innerHTML = `💡 ${remaining}`;
+}
+
+function handleHintClickL1() {
+  if (!hintBtnL1El) return;
+  if (hintCountL1 >= MAX_HINTS_L1) return;
+
+  showHintL1();
+  hintCountL1++;
+  updateHintLabelL1();
+
+  if (hintCountL1 >= MAX_HINTS_L1) {
+    hintBtnL1El.disabled = true;
+  }
+}
+
+if (autoColorToggleL1) {
+  autoColorToggleL1.addEventListener("change", () => {
+    autoColorL1 = autoColorToggleL1.checked;
+  });
+}
+
+function getNoteCountL1() {
+  const base = 5;
+  return base + rainbowsL1;
+}
+
+function updateStatusL1() {
+  setStatusBar(statusBarElL1, "Livello 1", getNoteCountL1(), consecutiveErrorsL1, 7);
+}
+
+function setSelectedColorL1(noteName) {
+  selectedColorL1 = noteName;
+  noteButtonsL1.forEach(btn => {
+    if (btn.dataset.note === noteName) btn.classList.add("selected");
+    else btn.classList.remove("selected");
+  });
+}
+
+function createNotesL1() {
+  const count = getNoteCountL1();
+  let pool = STAFF_CORE_POSITIONS.slice();
+
+  staffSvgL1.querySelectorAll(".note-circle, .error-x, .ledger-line").forEach(e => e.remove());
+  clearHintL1();
+  currentNotesL1 = [];
+  currentIndexL1 = 0;
+  consecutiveErrorsL1 = 0;
+  updateStatusL1();
+
+  hintCountL1 = 0;
+  if (hintBtnL1El) {
+    hintBtnL1El.disabled = false;
+    updateHintLabelL1();
+  }
+
+  const startX = 220;
+  const endX = 780;
+  const step = (endX - startX) / Math.max(1, (count - 1));
+
+  let lastName = null;
+  let lastOct = null;
+
+  for (let i = 0; i < count; i++) {
+    let p;
+    let safety = 0;
+    do {
+      p = pool[Math.floor(Math.random() * pool.length)];
+      safety++;
+    } while (
+      safety < 50 &&
+      lastName !== null &&
+      p.noteName === lastName &&
+      p.octave === lastOct
+    );
+
+    const cx = startX + step * i;
+    const cy = p.y;
+
+    const noteName = p.noteName;
+    const octave = p.octave;
+    lastName = noteName;
+    lastOct = octave;
+
+    const baseFreq = NOTE_FREQS[noteName] || 440;
+    const freq = baseFreq * (octave === 2 ? 2 : 1);
+
+    const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", 12);
+    circle.classList.add("note-circle");
+    circle.dataset.noteName = noteName;
+    circle.dataset.octave = octave;
+    staffSvgL1.appendChild(circle);
+
+    const obj = { element: circle, cx, cy, noteName, octave, freq, solved: false };
+    currentNotesL1.push(obj);
+
+    circle.onclick = () => {
+      playTone(freq);
+      handleAnswerL1(obj);
+    };
+  }
+
+  currentNotesL1.sort((a,b) => a.cx - b.cx);
+  setCurrentTargetL1();
+}
+
+function setCurrentTargetL1() {
+  currentNotesL1.forEach(n => n.element.classList.remove("target"));
+  while (currentIndexL1 < currentNotesL1.length && currentNotesL1[currentIndexL1].solved) currentIndexL1++;
+  if (currentIndexL1 >= currentNotesL1.length) {
+    showRainbowL1();
+    return;
+  }
+  currentNotesL1[currentIndexL1].element.classList.add("target");
+  updateStatusL1();
+}
+
+function softResetLevel1() {
+  if (!staffSvgL1) return;
+  currentIndexL1 = 0;
+  consecutiveErrorsL1 = 0;
+  createNotesL1();
+}
+
+function handleAnswerL1(clickedNoteObj) {
+  if (currentIndexL1 >= currentNotesL1.length) return;
+  const target = currentNotesL1[currentIndexL1];
+
+  if (clickedNoteObj !== target) {
+    playError();
+    consecutiveErrorsL1++;
+    updateStatusL1();
+    const x = document.createElementNS("http://www.w3.org/2000/svg","text");
+    x.setAttribute("x", clickedNoteObj.cx + 12);
+    x.setAttribute("y", clickedNoteObj.cy + 6);
+    x.classList.add("error-x");
+    x.textContent = "✗";
+    staffSvgL1.appendChild(x);
+    setTimeout(() => x.remove(), 600);
+    return;
+  }
+
+  if (!selectedColorL1) {
+    playError();
+    consecutiveErrorsL1++;
+    updateStatusL1();
+    const x = document.createElementNS("http://www.w3.org/2000/svg","text");
+    x.setAttribute("x", target.cx + 12);
+    x.setAttribute("y", target.cy + 6);
+    x.classList.add("error-x");
+    x.textContent = "✗";
+    staffSvgL1.appendChild(x);
+    setTimeout(() => x.remove(), 600);
+    return;
+  }
+
+  if (selectedColorL1 === target.noteName) {
+    const col = getNoteColor(target.noteName);
+    target.element.style.fill = col;
+    target.element.classList.remove("target");
+    target.element.style.stroke = "#111827";
+    target.element.style.filter = "none";
+    target.element.style.strokeWidth = 2;
+    target.solved = true;
+    playTone(target.freq);
+    consecutiveErrorsL1 = 0;
+    currentIndexL1++;
+    setTimeout(setCurrentTargetL1, 250);
+  } else {
+    playError();
+    consecutiveErrorsL1++;
+    updateStatusL1();
+    const x = document.createElementNS("http://www.w3.org/2000/svg","text");
+    x.setAttribute("x", target.cx + 12);
+    x.setAttribute("y", target.cy + 6);
+    x.classList.add("error-x");
+    x.textContent = "✗";
+    staffSvgL1.appendChild(x);
+    setTimeout(() => x.remove(), 600);
+  }
+}
+
+function handleAutoColorL1(colorNoteName) {
+  if (currentIndexL1 >= currentNotesL1.length) return;
+  const target = currentNotesL1[currentIndexL1];
+
+  if (colorNoteName === target.noteName) {
+    const col = getNoteColor(target.noteName);
+    target.element.style.fill = col;
+    target.element.classList.remove("target");
+    target.element.style.stroke = "#111827";
+    target.element.style.filter = "none";
+    target.element.style.strokeWidth = 2;
+    target.solved = true;
+    playTone(target.freq);
+    consecutiveErrorsL1 = 0;
+    currentIndexL1++;
+    setTimeout(setCurrentTargetL1, 250);
+  } else {
+    playError();
+    consecutiveErrorsL1++;
+    updateStatusL1();
+    const x = document.createElementNS("http://www.w3.org/2000/svg","text");
+    x.setAttribute("x", target.cx + 12);
+    x.setAttribute("y", target.cy + 6);
+    x.classList.add("error-x");
+    x.textContent = "✗";
+    staffSvgL1.appendChild(x);
+    setTimeout(() => x.remove(), 600);
+  }
+}
+
+function addMedalIconL1(index) {
+  const medal = document.createElement("div");
+  medal.className = "medal-icon bronze";
+  medal.textContent = index;
+  medalsPanelL1.appendChild(medal);
+}
+
+function playVictoryMelodyL1() {
+  if (!currentNotesL1.length) return;
+  currentNotesL1.forEach((n, idx) => {
+    setTimeout(() => playTone(n.freq), idx * MELODY_STEP_MS);
+  });
+}
+
+function showRainbowL1() {
+  rainbowsL1++;
+  totalBronze++;
+  incrementSessionMedal("bronze");
+
+  if (rainbowWinIndexL1) rainbowWinIndexL1.textContent = rainbowsL1;
+  addMedalIconL1(rainbowsL1);
+  consecutiveErrorsL1 = 0;
+  updateStatusL1();
+  updateRainbowCountersGlobal();
+
+  const totalDuration = MELODY_STEP_MS * currentNotesL1.length + 600;
+
+  if (rainbowsL1 >= 10) {
+    setFinalOverlayTexts(1);
+    finalOverlayL1.classList.add("active");
+    playVictoryMelodyL1();
+    setTimeout(() => {
+      finalOverlayL1.classList.remove("active");
+      level1PageEl.style.display = "none";
+      level2PageEl.style.display = "flex";
+      level3PageEl.style.display = "none";
+      playPageEl.style.display  = "none";
+      lastGamePageId = "level2Page";
+      softResetLevel2();
+    }, totalDuration);
+  } else {
+    setNormalOverlayTexts(1);
+    rainbowOverlayL1.classList.add("active");
+    playVictoryMelodyL1();
+    setTimeout(() => {
+      rainbowOverlayL1.classList.remove("active");
+      createNotesL1();
+    }, totalDuration);
+  }
+}
+
+noteButtonsL1.forEach(btn => {
+  btn.addEventListener("click", () => {
+    const note = btn.dataset.note;
+    const freq = NOTE_FREQS[note] || 440;
+    playTone(freq);
+    setSelectedColorL1(note);
+    if (autoColorL1) handleAutoColorL1(note);
+  });
+});
+
+if (staffSvgL1) {
+  createNotesL1();
+  updateStatusL1();
+}
+
+/* ===========================
+   LIVELLO 2
+   =========================== */
+
+const staffSvg    = document.getElementById("staffSvg");
+const statusBarEl = document.getElementById("statusBar");
+const pianoKeysEl = document.getElementById("pianoKeys");
+const resetBtn    = document.getElementById("resetBtn");
+const rainbowWinIndex = document.getElementById("rainbowWinIndex");
+const medalsPanel  = document.getElementById("medalsPanel");
+const rainbowOverlay = document.getElementById("rainbowOverlay");
+const finalOverlayL2 = document.getElementById("finalOverlayL2");
+
+let currentNotes = [];
+let currentIndex = 0;
+let rainbows = 0;
+let consecutiveErrors = 0;
+
+function getNoteCount() {
+  const base = 10;
+  const increment = 1;
+  const max = 24;
+  return Math.min(base + rainbows * increment, max);
+}
+
+function getLevel() {
+  return (rainbows >= 10) ? 2 : 1;
+}
+
+function updateStatus() {
+  const lvl = getLevel();
+  setStatusBar(statusBarEl, `Livello ${lvl}`, getNoteCount(), consecutiveErrors, 7);
+}
+
+function playVictoryMelody() {
+  if (!currentNotes.length) return;
+  currentNotes.forEach((n, idx) => {
+    setTimeout(() => playTone(n.freq), idx * MELODY_STEP_MS);
+  });
+}
+
+function renderPiano() {
+  pianoKeysEl.innerHTML = "";
+  const whiteNotesOrder = ["do","re","mi","fa","sol","la","si"];
+  const totalWhite = 14;
+
+  for (let octave = 1; octave <= 2; octave++) {
+    whiteNotesOrder.forEach(noteName => {
+      const label = noteName.toUpperCase();
+      let baseFreq = NOTE_FREQS[noteName] || 440;
+      if (octave === 2) baseFreq *= 2;
+
+      const whiteKey = document.createElement("div");
+      whiteKey.className = "white-key";
+      whiteKey.dataset.noteName = noteName;
+      whiteKey.dataset.octave = String(octave);
+      whiteKey.dataset.freq = baseFreq;
+      whiteKey.textContent = label;
+
+      const col = getNoteColor(noteName);
+      whiteKey.style.background = `linear-gradient(to bottom, #ffffff 0%, ${col} 75%, #e5e7eb 100%)`;
+
+      whiteKey.onclick = () => {
+        playTone(baseFreq);
+        handleAnswer(noteName, octave);
+      };
+
+      pianoKeysEl.appendChild(whiteKey);
+    });
+  }
+
+  const blackLayout = [
+    { name:"do#", whiteIndex:0, octave:1 },
+    { name:"re#", whiteIndex:1, octave:1 },
+    { name:"fa#", whiteIndex:3, octave:1 },
+    { name:"sol#",whiteIndex:4, octave:1 },
+    { name:"la#", whiteIndex:5, octave:1 },
+    { name:"do#", whiteIndex:7, octave:2 },
+    { name:"re#", whiteIndex:8, octave:2 },
+    { name:"fa#", whiteIndex:10, octave:2 },
+    { name:"sol#",whiteIndex:11, octave:2 },
+    { name:"la#", whiteIndex:12, octave:2 }
+  ];
+
+  blackLayout.forEach(b => {
+    const baseFreq = NOTE_FREQS[b.name] || 440;
+    const freq = baseFreq * (b.octave === 2 ? 2 : 1);
+    const blackKey = document.createElement("div");
+    blackKey.className = "black-key";
+    blackKey.textContent = b.name.replace("#","♯");
+
+    const leftPercent = ((b.whiteIndex + 1) / totalWhite) * 100;
+    blackKey.style.left = leftPercent + "%";
+
+    blackKey.onclick = (ev) => {
+      ev.stopPropagation();
+      playTone(freq);
+    };
+
+    pianoKeysEl.appendChild(blackKey);
+  });
+}
+
+function createNotes() {
+  const count = getNoteCount();
+  const useLedger = (getLevel() >= 2);
+
+  let pool = STAFF_CORE_POSITIONS.slice();
+  if (useLedger) {
+    pool = pool.concat(STAFF_LEDGER_LOW, STAFF_LEDGER_HIGH);
+  }
+
+  staffSvg.querySelectorAll(".note-circle, .error-x, .ledger-line").forEach(e => e.remove());
+  currentNotes = [];
+  currentIndex = 0;
+  consecutiveErrors = 0;
+  updateStatus();
+
+  const startX = 220;
+  const endX = 780;
+  const step = (endX - startX) / Math.max(1, (count - 1));
+
+  let lastName = null;
+  let lastOct = null;
+
+  for (let i = 0; i < count; i++) {
+    let p;
+    let safety = 0;
+    do {
+      p = pool[Math.floor(Math.random() * pool.length)];
+      safety++;
+    } while (
+      safety < 50 &&
+      lastName !== null &&
+      p.noteName === lastName &&
+      p.octave === lastOct
+    );
+
+    const cx = startX + step * i;
+    const cy = p.y;
+
+    const noteName = p.noteName;
+    const octave = p.octave;
+    lastName = noteName;
+    lastOct = octave;
+
+    const baseFreq = NOTE_FREQS[noteName] || 440;
+    const freq = baseFreq * (octave === 2 ? 2 : 1);
+
+    if ((cy > 200 || cy < 120) && !(noteName === "re" && octave === 1) && !(noteName === "sol" && octave === 2)) {
+      const ledger = document.createElementNS("http://www.w3.org/2000/svg","line");
+      ledger.setAttribute("x1", cx - 16);
+      ledger.setAttribute("x2", cx + 16);
+      ledger.setAttribute("y1", cy);
+      ledger.setAttribute("y2", cy);
+      ledger.classList.add("ledger-line");
+      staffSvg.appendChild(ledger);
+    }
+
+    const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", 12);
+    circle.classList.add("note-circle");
+    circle.dataset.noteName = noteName;
+    circle.dataset.octave = octave;
+    staffSvg.appendChild(circle);
+
+    const obj = { element: circle, cx, cy, noteName, octave, freq, solved: false };
+    currentNotes.push(obj);
+
+    circle.onclick = () => {
+      playTone(freq);
+    };
+  }
+
+  currentNotes.sort((a,b) => a.cx - b.cx);
+  setCurrentTarget();
+}
+
+function setCurrentTarget() {
+  currentNotes.forEach(n => n.element.classList.remove("target"));
+  while (currentIndex < currentNotes.length && currentNotes[currentIndex].solved) currentIndex++;
+  if (currentIndex >= currentNotes.length) {
+    showRainbow();
+    return;
+  }
+  currentNotes[currentIndex].element.classList.add("target");
+  updateStatus();
+}
+
+function softResetLevel2() {
+  if (!staffSvg) return;
+  currentIndex = 0;
+  consecutiveErrors = 0;
+  createNotes();
+}
+
+function handleAnswer(answerNoteName, answerOctave) {
+  if (currentIndex >= currentNotes.length) return;
+  const target = currentNotes[currentIndex];
+
+  if (answerNoteName === target.noteName && answerOctave === target.octave) {
+    const col = getNoteColor(target.noteName);
+    target.element.style.fill = col;
+    target.element.classList.remove("target");
+    target.element.style.stroke = "#111827";
+    target.element.style.filter = "none";
+    target.element.style.strokeWidth = 2;
+    target.solved = true;
+    playTone(target.freq);
+    consecutiveErrors = 0;
+    currentIndex++;
+    setTimeout(setCurrentTarget, 250);
+  } else {
+    playError();
+    consecutiveErrors++;
+    updateStatus();
+    const x = document.createElementNS("http://www.w3.org/2000/svg","text");
+    x.setAttribute("x", target.cx + 12);
+    x.setAttribute("y", target.cy + 6);
+    x.classList.add("error-x");
+    x.textContent = "✗";
+    staffSvg.appendChild(x);
+    setTimeout(() => x.remove(), 600);
+
+    if (consecutiveErrors >= 10) {
+      resetAllLevels();
+    }
+  }
+}
+
+function addMedalIcon(index) {
+  const medal = document.createElement("div");
+  medal.className = "medal-icon silver";
+  medal.textContent = index;
+  medalsPanel.appendChild(medal);
+}
+
+function showRainbow() {
+  rainbows++;
+  totalSilver++;
+  incrementSessionMedal("silver");
+
+  if (rainbowWinIndex) rainbowWinIndex.textContent = rainbows;
+  addMedalIcon(rainbows);
+  consecutiveErrors = 0;
+  updateStatus();
+  updateRainbowCountersGlobal();
+
+  const totalDuration = MELODY_STEP_MS * currentNotes.length + 600;
+
+  if (rainbows >= 10) {
+    setFinalOverlayTexts(2);
+    finalOverlayL2.classList.add("active");
+    playVictoryMelody();
+    setTimeout(() => {
+      finalOverlayL2.classList.remove("active");
+      level2PageEl.style.display = "none";
+      level3PageEl.style.display = "flex";
+      playPageEl.style.display  = "none";
+      lastGamePageId = "level3Page";
+      softResetLevel3();
+    }, totalDuration);
+  } else {
+    setNormalOverlayTexts(2);
+    rainbowOverlay.classList.add("active");
+    playVictoryMelody();
+    setTimeout(() => {
+      rainbowOverlay.classList.remove("active");
+      createNotes();
+    }, totalDuration);
+  }
+}
+
+if (pianoKeysEl && staffSvg) {
+  renderPiano();
+  createNotes();
+  updateStatus();
+}
+
+/* ===========================
+   LIVELLO 3
+   =========================== */
+
+const staffSvgL3    = document.getElementById("staffSvgL3");
+const statusBarElL3 = document.getElementById("statusBarL3");
+const pianoKeysElL3 = document.getElementById("pianoKeysL3");
+const resetBtnL3    = document.getElementById("resetBtnL3");
+const rainbowWinIndexL3 = document.getElementById("rainbowWinIndexL3");
+const medalsPanelL3  = document.getElementById("medalsPanelL3");
+const rainbowOverlayL3 = document.getElementById("rainbowOverlayL3");
+const finalOverlayL3 = document.getElementById("finalOverlayL3");
+
+let currentNotesL3 = [];
+let currentIndexL3 = 0;
+let rainbowsL3 = 0;
+let consecutiveErrorsL3 = 0;
+
+function getNoteCountL3() {
+  const base = 10;
+  const increment = 1;
+  const max = 24;
+  return Math.min(base + rainbowsL3 * increment, max);
+}
+
+function getLevelL3() {
+  return (rainbowsL3 >= 10) ? 2 : 1;
+}
+
+function updateStatusL3() {
+  const lvl = getLevelL3();
+  setStatusBar(statusBarElL3, "Livello 3", getNoteCountL3(), consecutiveErrorsL3, 7);
+}
+
+function playVictoryMelodyL3() {
+  if (!currentNotesL3.length) return;
+  currentNotesL3.forEach((n, idx) => {
+    setTimeout(() => playTone(n.freq), idx * MELODY_STEP_MS);
+  });
+}
+
+function renderPianoL3() {
+  pianoKeysElL3.innerHTML = "";
+  const whiteNotesOrder = ["do","re","mi","fa","sol","la","si"];
+  const totalWhite = 14;
+
+  for (let octave = 1; octave <= 2; octave++) {
+    whiteNotesOrder.forEach(noteName => {
+      let baseFreq = NOTE_FREQS[noteName] || 440;
+      if (octave === 2) baseFreq *= 2;
+
+      const whiteKey = document.createElement("div");
+      whiteKey.className = "white-key";
+      whiteKey.dataset.noteName = noteName;
+      whiteKey.dataset.octave = String(octave);
+      whiteKey.dataset.freq = baseFreq;
+      whiteKey.textContent = "";
+
+      whiteKey.style.background = "linear-gradient(to bottom, #ffffff 0%, #f3f4f6 40%, #e5e7eb 100%)";
+
+      whiteKey.onclick = () => {
+        playTone(baseFreq);
+        handleAnswerL3(noteName, octave);
+      };
+
+      pianoKeysElL3.appendChild(whiteKey);
+    });
+  }
+
+  const blackLayout = [
+    { name:"do#", whiteIndex:0, octave:1 },
+    { name:"re#", whiteIndex:1, octave:1 },
+    { name:"fa#", whiteIndex:3, octave:1 },
+    { name:"sol#",whiteIndex:4, octave:1 },
+    { name:"la#", whiteIndex:5, octave:1 },
+    { name:"do#", whiteIndex:7, octave:2 },
+    { name:"re#", whiteIndex:8, octave:2 },
+    { name:"fa#", whiteIndex:10, octave:2 },
+    { name:"sol#",whiteIndex:11, octave:2 },
+    { name:"la#", whiteIndex:12, octave:2 }
+  ];
+
+  blackLayout.forEach(b => {
+    const baseFreq = NOTE_FREQS[b.name] || 440;
+    const freq = baseFreq * (b.octave === 2 ? 2 : 1);
+    const blackKey = document.createElement("div");
+    blackKey.className = "black-key";
+    blackKey.textContent = "";
+
+    const leftPercent = ((b.whiteIndex + 1) / totalWhite) * 100;
+    blackKey.style.left = leftPercent + "%";
+
+    blackKey.onclick = (ev) => {
+      ev.stopPropagation();
+      playTone(freq);
+    };
+
+    pianoKeysElL3.appendChild(blackKey);
+  });
+}
+
+function createNotesL3() {
+  const count = getNoteCountL3();
+  const useLedger = (getLevelL3() >= 2);
+
+  let pool = STAFF_CORE_POSITIONS.slice();
+  if (useLedger) {
+    pool = pool.concat(STAFF_LEDGER_LOW, STAFF_LEDGER_HIGH);
+  }
+
+  staffSvgL3.querySelectorAll(".note-circle, .error-x, .ledger-line").forEach(e => e.remove());
+  currentNotesL3 = [];
+  currentIndexL3 = 0;
+  consecutiveErrorsL3 = 0;
+  updateStatusL3();
+
+  const startX = 220;
+  const endX = 780;
+  const step = (endX - startX) / Math.max(1, (count - 1));
+
+  let lastName = null;
+  let lastOct = null;
+
+  for (let i = 0; i < count; i++) {
+    let p;
+    let safety = 0;
+    do {
+      p = pool[Math.floor(Math.random() * pool.length)];
+      safety++;
+    } while (
+      safety < 50 &&
+      lastName !== null &&
+      p.noteName === lastName &&
+      p.octave === lastOct
+    );
+
+    const cx = startX + step * i;
+    const cy = p.y;
+
+    const noteName = p.noteName;
+    const octave = p.octave;
+    lastName = noteName;
+    lastOct = octave;
+
+    const baseFreq = NOTE_FREQS[noteName] || 440;
+    const freq = baseFreq * (octave === 2 ? 2 : 1);
+
+    if ((cy > 200 || cy < 120) && !(noteName === "re" && octave === 1) && !(noteName === "sol" && octave === 2)) {
+      const ledger = document.createElementNS("http://www.w3.org/2000/svg","line");
+      ledger.setAttribute("x1", cx - 16);
+      ledger.setAttribute("x2", cx + 16);
+      ledger.setAttribute("y1", cy);
+      ledger.setAttribute("y2", cy);
+      ledger.classList.add("ledger-line");
+      staffSvgL3.appendChild(ledger);
+    }
+
+    const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+    circle.setAttribute("cx", cx);
+    circle.setAttribute("cy", cy);
+    circle.setAttribute("r", 12);
+    circle.classList.add("note-circle");
+    circle.dataset.noteName = noteName;
+    circle.dataset.octave = octave;
+    staffSvgL3.appendChild(circle);
+
+    const obj = { element: circle, cx, cy, noteName, octave, freq, solved: false };
+    currentNotesL3.push(obj);
+
+    circle.onclick = () => {
+      playTone(freq);
+    };
+  }
+
+  currentNotesL3.sort((a,b) => a.cx - b.cx);
+  setCurrentTargetL3();
+}
+
+function setCurrentTargetL3() {
+  currentNotesL3.forEach(n => n.element.classList.remove("target"));
+  while (currentIndexL3 < currentNotesL3.length && currentNotesL3[currentIndexL3].solved) currentIndexL3++;
+  if (currentIndexL3 >= currentNotesL3.length) {
+    showRainbowL3();
+    return;
+  }
+  currentNotesL3[currentIndexL3].element.classList.add("target");
+  updateStatusL3();
+}
+
+function softResetLevel3() {
+  if (!staffSvgL3) return;
+  currentIndexL3 = 0;
+  consecutiveErrorsL3 = 0;
+  createNotesL3();
+}
+
+function handleAnswerL3(answerNoteName, answerOctave) {
+  if (currentIndexL3 >= currentNotesL3.length) return;
+  const target = currentNotesL3[currentIndexL3];
+
+  if (answerNoteName === target.noteName && answerOctave === target.octave) {
+    target.element.style.fill = "#111827";
+    target.element.classList.remove("target");
+    target.element.style.stroke = "#111827";
+    target.element.style.filter = "none";
+    target.element.style.strokeWidth = 2;
+    target.solved = true;
+    playTone(target.freq);
+    consecutiveErrorsL3 = 0;
+    currentIndexL3++;
+    setTimeout(setCurrentTargetL3, 250);
+  } else {
+    playError();
+    consecutiveErrorsL3++;
+    updateStatusL3();
+    const x = document.createElementNS("http://www.w3.org/2000/svg","text");
+    x.setAttribute("x", target.cx + 12);
+    x.setAttribute("y", target.cy + 6);
+    x.classList.add("error-x");
+    x.textContent = "✗";
+    staffSvgL3.appendChild(x);
+    setTimeout(() => x.remove(), 600);
+
+    if (consecutiveErrorsL3 >= 10) {
+      resetAllLevels();
+    }
+  }
+}
+
+function addMedalIconL3(index) {
+  const medal = document.createElement("div");
+  medal.className = "medal-icon gold";
+  medal.textContent = index;
+  medalsPanelL3.appendChild(medal);
+}
+
+function showRainbowL3() {
+  rainbowsL3++;
+  totalGold++;
+  incrementSessionMedal("gold");
+
+  if (rainbowWinIndexL3) rainbowWinIndexL3.textContent = rainbowsL3;
+  addMedalIconL3(rainbowsL3);
+  consecutiveErrorsL3 = 0;
+  updateStatusL3();
+  updateRainbowCountersGlobal();
+
+  const totalDuration = MELODY_STEP_MS * currentNotesL3.length + 600;
+
+  if (rainbowsL3 >= 10) {
+    setFinalOverlayTexts(3);
+    finalOverlayL3.classList.add("active");
+    playVictoryMelodyL3();
+    setTimeout(() => {
+      finalOverlayL3.classList.remove("active");
+      createNotesL3();
+    }, totalDuration);
+  } else {
+    setNormalOverlayTexts(3);
+    rainbowOverlayL3.classList.add("active");
+    playVictoryMelodyL3();
+    setTimeout(() => {
+      rainbowOverlayL3.classList.remove("active");
+      createNotesL3();
+    }, totalDuration);
+  }
+}
+
+if (pianoKeysElL3 && staffSvgL3) {
+  renderPianoL3();
+  createNotesL3();
+  updateStatusL3();
+}
+
+/* ===========================
+   MODALITÀ PLAY
+   =========================== */
+
+const staffSvgPlay  = document.getElementById("staffSvgPlay");
+const pianoKeysPlay = document.getElementById("pianoKeysPlay");
+const resetBtnPlay  = document.getElementById("resetBtnPlay");
+
+let playNotes = [];
+let playNoteIndex = 0;
+const PLAY_MAX_NOTES = 16;
+const PLAY_START_X = 220;
+const PLAY_END_X   = 780;
+const PLAY_STEP    = (PLAY_END_X - PLAY_START_X) / (PLAY_MAX_NOTES - 1);
+
+function clearPlayStaff() {
+  if (!staffSvgPlay) return;
+  staffSvgPlay.querySelectorAll(".note-circle[data-play='1'], .ledger-line[data-play='1']").forEach(e => e.remove());
+  playNotes = [];
+  playNoteIndex = 0;
+}
+
+function addPlayNote(noteName, octave) {
+  if (!staffSvgPlay) return;
+  const y = getStaffY(noteName, octave);
+  if (y == null) return;
+
+  if (playNoteIndex >= PLAY_MAX_NOTES) {
+    clearPlayStaff();
+  }
+
+  const cx = PLAY_START_X + PLAY_STEP * playNoteIndex;
+  const cy = y;
+
+  if ((cy > 200 || cy < 120) && !(noteName === "re" && octave === 1) && !(noteName === "sol" && octave === 2)) {
+    const ledger = document.createElementNS("http://www.w3.org/2000/svg","line");
+    ledger.setAttribute("x1", cx - 16);
+    ledger.setAttribute("x2", cx + 16);
+    ledger.setAttribute("y1", cy);
+    ledger.setAttribute("y2", cy);
+    ledger.classList.add("ledger-line");
+    ledger.dataset.play = "1";
+    staffSvgPlay.appendChild(ledger);
+  }
+
+  const circle = document.createElementNS("http://www.w3.org/2000/svg","circle");
+  circle.setAttribute("cx", cx);
+  circle.setAttribute("cy", cy);
+  circle.setAttribute("r", 12);
+  circle.classList.add("note-circle");
+  circle.dataset.play = "1";
+  const col = getNoteColor(noteName);
+  circle.style.fill = col;
+  circle.style.stroke = "#111827";
+  staffSvgPlay.appendChild(circle);
+
+  playNotes.push({ element: circle, cx, cy, noteName, octave });
+  playNoteIndex++;
+}
+
+function renderPianoPlay() {
+  if (!pianoKeysPlay) return;
+  pianoKeysPlay.innerHTML = "";
+  const whiteNotesOrder = ["do","re","mi","fa","sol","la","si"];
+  const totalWhite = 14;
+
+  for (let octave = 1; octave <= 2; octave++) {
+    whiteNotesOrder.forEach(noteName => {
+      let baseFreq = NOTE_FREQS[noteName] || 440;
+      if (octave === 2) baseFreq *= 2;
+
+      const whiteKey = document.createElement("div");
+      whiteKey.className = "white-key";
+      whiteKey.dataset.noteName = noteName;
+      whiteKey.dataset.octave = String(octave);
+      whiteKey.dataset.freq = baseFreq;
+      whiteKey.textContent = "";
+
+      whiteKey.style.background = "linear-gradient(to bottom, #ffffff 0%, #f3f4f6 40%, #e5e7eb 100%)";
+
+      whiteKey.onclick = () => {
+        playTone(baseFreq);
+        addPlayNote(noteName, octave);
+      };
+
+      pianoKeysPlay.appendChild(whiteKey);
+    });
+  }
+
+  const blackLayout = [
+    { name:"do#", whiteIndex:0, octave:1 },
+    { name:"re#", whiteIndex:1, octave:1 },
+    { name:"fa#", whiteIndex:3, octave:1 },
+    { name:"sol#",whiteIndex:4, octave:1 },
+    { name:"la#", whiteIndex:5, octave:1 },
+    { name:"do#", whiteIndex:7, octave:2 },
+    { name:"re#", whiteIndex:8, octave:2 },
+    { name:"fa#", whiteIndex:10, octave:2 },
+    { name:"sol#",whiteIndex:11, octave:2 },
+    { name:"la#", whiteIndex:12, octave:2 }
+  ];
+
+  blackLayout.forEach(b => {
+    const baseFreq = NOTE_FREQS[b.name] || 440;
+    const freq = baseFreq * (b.octave === 2 ? 2 : 1);
+    const blackKey = document.createElement("div");
+    blackKey.className = "black-key";
+    blackKey.textContent = "";
+
+    const leftPercent = ((b.whiteIndex + 1) / totalWhite) * 100;
+    blackKey.style.left = leftPercent + "%";
+
+    blackKey.onclick = (ev) => {
+      ev.stopPropagation();
+      playTone(freq);
+      // tasti neri non scrivono
+    };
+
+    pianoKeysPlay.appendChild(blackKey);
+  });
+}
+
+if (pianoKeysPlay && staffSvgPlay) {
+  renderPianoPlay();
+}
+
+/* ===========================
+   RESET GLOBALE
+   =========================== */
+
+function resetAllLevels() {
+  // L1
+  rainbowsL1 = 0;
+  consecutiveErrorsL1 = 0;
+  currentIndexL1 = 0;
+  selectedColorL1 = null;
+  if (rainbowWinIndexL1) rainbowWinIndexL1.textContent = "0";
+  if (medalsPanelL1) medalsPanelL1.innerHTML = "";
+  noteButtonsL1.forEach(btn => btn.classList.remove("selected"));
+  if (staffSvgL1) {
+    createNotesL1();
+    updateStatusL1();
+  }
+  clearHintL1();
+
+  // L2
+  rainbows = 0;
+  consecutiveErrors = 0;
+  currentIndex = 0;
+  if (rainbowWinIndex) rainbowWinIndex.textContent = "0";
+  if (medalsPanel) medalsPanel.innerHTML = "";
+  if (staffSvg) {
+    createNotes();
+    updateStatus();
+  }
+
+  // L3
+  rainbowsL3 = 0;
+  consecutiveErrorsL3 = 0;
+  currentIndexL3 = 0;
+  if (rainbowWinIndexL3) rainbowWinIndexL3.textContent = "0";
+  if (medalsPanelL3) medalsPanelL3.innerHTML = "";
+  if (staffSvgL3) {
+    createNotesL3();
+    updateStatusL3();
+  }
+
+  // Play
+  clearPlayStaff();
+
+  updateRainbowCountersGlobal();
+}
+
+if (resetBtnL1)   resetBtnL1.onclick   = resetAllLevels;
+if (resetBtn)     resetBtn.onclick     = resetAllLevels;
+if (resetBtnL3)   resetBtnL3.onclick   = resetAllLevels;
+if (resetBtnPlay) resetBtnPlay.onclick = () => clearPlayStaff();
+
+
+/* ===========================
+   PAGINA TROFEI
+   =========================== */
+
+const trophyContentEl = document.getElementById("trophyContent");
+const chestGridEl     = document.getElementById("chestGrid");
+const clearChestsBtn  = document.getElementById("clearChestsBtn");
+const trophyBackBtn   = document.getElementById("trophyBackBtn");
+const trophyHomeBtn   = document.getElementById("trophyHomeBtn");
+
+function showChestDetails(session) {
+  if (!trophyContentEl || !session) return;
+  const bronzeCount = session.bronze || 0;
+  const silverCount = session.silver || 0;
+  const goldCount   = session.gold   || 0;
+
+  let html = "";
+  const labelNumber = (typeof session.displayNumber === "number")
+    ? session.displayNumber
+    : session.id;
+
+  html += `<div class="trophy-section">
+    <h2>Scrigno ${labelNumber}</h2>
+    <div class="trophy-medals-row">`;
+  const totalCoins = bronzeCount + silverCount + goldCount;
+  if (totalCoins === 0) {
+    html += `<div class="trophy-empty">In questa sessione non hai raccolto medaglie.</div>`;
+    html += `</div></div>`;
+  } else {
+    html += `</div></div>`;
+
+    html += `<div class="trophy-section">
+      <h2>Rame (Primo livello)</h2>
+      <div class="trophy-medals-row">`;
+    if (bronzeCount === 0) {
+      html += `<div class="trophy-empty">Nessuna medaglia di rame in questa sessione.</div>`;
+    } else {
+      for (let i = 0; i < bronzeCount; i++) {
+        html += `<div class="medal-icon bronze">●</div>`;
+      }
+    }
+    html += `</div></div>`;
+
+    html += `<div class="trophy-section">
+      <h2>Argento (Secondo livello)</h2>
+      <div class="trophy-medals-row">`;
+    if (silverCount === 0) {
+      html += `<div class="trophy-empty">Nessuna medaglia d’argento in questa sessione.</div>`;
+    } else {
+      for (let i = 0; i < silverCount; i++) {
+        html += `<div class="medal-icon silver">●</div>`;
+      }
+    }
+    html += `</div></div>`;
+
+    html += `<div class="trophy-section">
+      <h2>Oro (Terzo livello)</h2>
+      <div class="trophy-medals-row">`;
+    if (goldCount === 0) {
+      html += `<div class="trophy-empty">Nessuna medaglia d’oro in questa sessione.</div>`;
+    } else {
+      for (let i = 0; i < goldCount; i++) {
+        html += `<div class="medal-icon gold">●</div>`;
+      }
+    }
+    html += `</div></div>`;
+  }
+
+  trophyContentEl.innerHTML = html;
+  trophyContentEl.style.display = "block";
+}
+
+function renderChestGrid() {
+  if (!chestGridEl) return;
+  chestGridEl.innerHTML = "";
+  const maxSlots = 64;
+
+  // prendi solo le sessioni che hanno almeno una medaglia
+  const filled = sessions
+    .filter(s => ((s.bronze || 0) + (s.silver || 0) + (s.gold || 0)) > 0)
+    .sort((a, b) => a.id - b.id);
+
+  for (let i = 0; i < maxSlots; i++) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+
+    if (i < filled.length) {
+      const session = filled[i];
+      const labelNumber = (typeof session.displayNumber === "number")
+        ? session.displayNumber
+        : session.id;
+      btn.className = "chest-btn chest-btn-filled";
+      btn.innerHTML = `🧰<br/>Scrigno ${labelNumber}`;
+      btn.addEventListener("click", () => {
+        showChestDetails(session);
+      });
+    } else {
+      btn.className = "chest-btn chest-btn-empty";
+      btn.disabled = true;
+      btn.innerHTML = "&nbsp;";
+    }
+
+    chestGridEl.appendChild(btn);
+  }
+}
+
+if (clearChestsBtn) {
+  clearChestsBtn.addEventListener("click", () => {
+    const pwd = window.prompt("Per cancellare tutti gli scrigni digita la password: scrigno");
+    if (pwd === null) return;
+    if (pwd === "scrigno") {
+      clearAllSessionChests();
+      if (trophyContentEl) {
+        trophyContentEl.style.display = "none";
+        trophyContentEl.innerHTML = "";
+      }
+      renderChestGrid();
+      alert("Tutti gli scrigni sono stati cancellati.");
+    } else {
+      alert("Password errata.");
+    }
+  });
+}
+/* ===========================
+   HOME, MENU, TROFEI, SUGGERIMENTO
+   =========================== */
+
+let lastGamePageId = "level2Page";
+
+document.addEventListener("DOMContentLoaded", function() {
+  loadSessionsFromStorage();
+  renderChestGrid();
+
+  const homeScreen = document.getElementById("homeScreen");
+  const btnLevel1  = document.getElementById("btnLevel1");
+  const btnLevel2  = document.getElementById("btnLevel2");
+  const btnLevel3  = document.getElementById("btnLevel3");
+  const btnPlay    = document.getElementById("btnPlay");
+  const level1Page = document.getElementById("level1Page");
+  const level2Page = document.getElementById("level2Page");
+  const level3Page = document.getElementById("level3Page");
+  const playPage   = document.getElementById("playPage");
+
+  const menuBtnL1   = document.getElementById("menuBtnL1");
+  const menuBtnL2   = document.getElementById("menuBtnL2");
+  const menuBtnL3   = document.getElementById("menuBtnL3");
+  const menuBtnPlay = document.getElementById("menuBtnPlay");
+
+  const trophyBtnL1   = document.getElementById("trophyBtnL1");
+  const trophyBtnL2   = document.getElementById("trophyBtnL2");
+  const trophyBtnL3   = document.getElementById("trophyBtnL3");
+  const trophyBtnPlay = document.getElementById("trophyBtnPlay");
+
+  const hintBtnL1 = document.getElementById("hintBtnL1");
+
+  const nameInput = document.getElementById("playerNameInput");
+  const genderRadios = document.querySelectorAll('input[name="gender"]');
+  const genderOptionLabels = document.querySelectorAll(".home-gender-option");
+  const homeTrophyBtn = document.getElementById("homeTrophyBtn");
+  const audioResetBtn = document.getElementById("audioResetBtn");
+
+  function refreshGenderButtons() {
+    genderOptionLabels.forEach(label => {
+      const input = label.querySelector('input[type="radio"]');
+      if (input && input.checked) label.classList.add("active");
+      else label.classList.remove("active");
+    });
+  }
+
+  if (nameInput) {
+    nameInput.addEventListener("input", () => {
+      playerName = nameInput.value.trim();
+    });
+  }
+
+  if (genderRadios) {
+    genderRadios.forEach(radio => {
+      radio.addEventListener("change", () => {
+        if (radio.checked) {
+          playerGender = radio.value === "F" ? "F" : "M";
+          refreshGenderButtons();
+        }
+      });
+    });
+  }
+
+  refreshGenderButtons();
+
+  function hideAllPages() {
+    level1Page.style.display = "none";
+    level2Page.style.display = "none";
+    level3Page.style.display = "none";
+    playPage.style.display   = "none";
+    trophyPageEl.style.display = "none";
+  }
+
+  function showHome() {
+    hideAllPages();
+    homeScreen.style.display = "flex";
+    if (!hasPlayedHomeJingle && audioUnlocked) {
+      playHomeJingle();
+      hasPlayedHomeJingle = true;
+    }
+  }
+
+  function showLevel(pageId) {
+    hideAllPages();
+    homeScreen.style.display = "none";
+    const pageMap = {
+      "level1Page": level1Page,
+      "level2Page": level2Page,
+      "level3Page": level3Page,
+      "playPage":   playPage
+    };
+    if (pageMap[pageId]) {
+      pageMap[pageId].style.display = "flex";
+      lastGamePageId = pageId;
+      if (pageId === "level1Page") softResetLevel1();
+      if (pageId === "level2Page") softResetLevel2();
+      if (pageId === "level3Page") softResetLevel3();
+      if (pageId === "playPage")   clearPlayStaff();
+    }
+  }
+
+  function showTrophyPage() {
+    homeScreen.style.display = "none";
+    level1Page.style.display = "none";
+    level2Page.style.display = "none";
+    level3Page.style.display = "none";
+    playPage.style.display   = "none";
+    trophyPageEl.style.display = "flex";
+    if (trophyContentEl) {
+      trophyContentEl.style.display = "none";
+      trophyContentEl.innerHTML = "";
+    }
+    renderChestGrid();
+  }
+
+  if (btnLevel1) btnLevel1.addEventListener("click", () => { startNewSessionChest(); showLevel("level1Page"); });
+  if (btnLevel2) btnLevel2.addEventListener("click", () => { startNewSessionChest(); showLevel("level2Page"); });
+  if (btnLevel3) btnLevel3.addEventListener("click", () => { startNewSessionChest(); showLevel("level3Page"); });
+  if (btnPlay)   btnPlay.addEventListener("click",   () => { startNewSessionChest(); showLevel("playPage"); });
+  if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
+
+  if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
+  if (menuBtnL2)   menuBtnL2.addEventListener("click", showHome);
+  if (menuBtnL3)   menuBtnL3.addEventListener("click", showHome);
+  if (menuBtnPlay) menuBtnPlay.addEventListener("click", showHome);
+
+  if (trophyBtnL1)   trophyBtnL1.addEventListener("click", showTrophyPage);
+  if (trophyBtnL2)   trophyBtnL2.addEventListener("click", showTrophyPage);
+  if (trophyBtnL3)   trophyBtnL3.addEventListener("click", showTrophyPage);
+  if (trophyBtnPlay) trophyBtnPlay.addEventListener("click", showTrophyPage);
+
+  if (trophyBackBtn) {
+    trophyBackBtn.addEventListener("click", () => {
+      if (lastGamePageId) {
+        trophyPageEl.style.display = "none";
+        if (lastGamePageId === "level1Page") level1Page.style.display = "flex";
+        if (lastGamePageId === "level2Page") level2Page.style.display = "flex";
+        if (lastGamePageId === "level3Page") level3Page.style.display = "flex";
+        if (lastGamePageId === "playPage")   playPage.style.display   = "flex";
+      } else {
+        showHome();
+      }
+    });
+  }
+
+  if (trophyHomeBtn) {
+    trophyHomeBtn.addEventListener("click", showHome);
+  }
+
+  if (hintBtnL1) {
+    hintBtnL1El = hintBtnL1;
+    updateHintLabelL1();
+    hintBtnL1.addEventListener("click", handleHintClickL1);
+  }
+
+  if (audioResetBtn) {
+    audioResetBtn.addEventListener("click", hardResetAudio);
+  }
+
+  updateRainbowCountersGlobal();
+});
+</script>
+
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker
+        .register("./service-worker.js")
+        .catch(function (err) {
+          console.log("Service worker registration failed:", err);
+        });
+    });
+  }
+</script>
+
+</body>
+</html>
