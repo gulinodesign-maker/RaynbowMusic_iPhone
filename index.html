@@ -979,7 +979,7 @@
 
     .chest-grid {
       display: grid;
-      grid-template-columns: repeat(8, minmax(0, 1fr));
+      grid-template-columns: repeat(7, minmax(0, 1fr));
       gap: 8px;
       justify-items: stretch;
       margin-left: 20px;
@@ -1362,10 +1362,10 @@ body {
       min-width:36px;min-height:36px;padding:6px 10px;font-size:0.9rem;
     }
     .staff-container { margin:4px 6px;padding:6px; }
-    svg.staff { max-height:130px; }
+    svg.staff { max-height:170px; }
     .keyboard-container { margin:4px 6px 6px;padding:4px 4px 6px; }
     .piano { padding:8px 8px 10px;border-radius:14px; }
-    .piano-keys { height:110px; }
+    .piano-keys { height:90px; }
     .white-key { font-size:0.75rem;padding-bottom:4px; }
     .black-key { height:65%;font-size:0.65rem;padding-bottom:3px; }
     .note-buttons-container { margin:4px 6px 6px; }
@@ -3847,7 +3847,7 @@ function showChestDetails(session) {
 function renderChestGrid() {
   if (!chestGridEl) return;
   chestGridEl.innerHTML = "";
-  const maxSlots = 64;
+  const maxSlots = 42;
 
   // prendi solo le sessioni che hanno almeno una medaglia
   const filled = sessions
