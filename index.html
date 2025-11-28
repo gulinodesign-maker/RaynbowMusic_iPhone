@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="theme-color" content="#46d1c6" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Music Rainbow" />
-  <meta name="apple-mobile-web-app-orientation" content="landscape" />
   <link rel="apple-touch-icon" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
   <link rel="icon" type="image/png" sizes="512x512" href="icons/icon-512.png" />
@@ -985,82 +984,6 @@
     #level1Page .auto-toggle-input:checked + .auto-slider::before {
       transform: translateX(30px);
     }
-
-    /* ===========================
-       ADATTAMENTI iPHONE LANDSCAPE
-       =========================== */
-    @media (orientation: landscape) and (max-height: 500px) {
-      html, body {
-        height: 100%;
-        overflow: hidden;
-      }
-
-      .home-screen {
-        padding: 0 env(safe-area-inset-left) 0 env(safe-area-inset-right);
-      }
-
-      .home-container {
-        max-width: 720px;
-        display: grid;
-        grid-template-columns: 1.1fr 1.4fr;
-        align-items: center;
-        gap: 24px;
-        padding: 24px 24px 28px;
-        text-align: left;
-      }
-
-      .home-rainbow-graphic {
-        margin: 0;
-        width: 260px;
-        height: 180px;
-        justify-self: center;
-      }
-
-      .home-title,
-      .home-subtitle {
-        text-align: left;
-      }
-
-      .home-player-box {
-        margin-bottom: 16px;
-      }
-
-      .home-levels {
-        max-width: 100%;
-      }
-
-      .page-container {
-        align-items: center;
-      }
-
-      .app {
-        margin: 12px auto;
-        padding: 16px 18px 18px;
-        max-width: 960px;
-      }
-
-      .staff-container {
-        margin-top: 8px;
-        margin-bottom: 8px;
-      }
-
-      svg.staff {
-        max-height: 210px;
-      }
-
-      .piano-keys {
-        height: 140px;
-      }
-
-      .keyboard-container {
-        margin-top: 10px;
-      }
-
-      .trophy-main {
-        padding-top: 8px;
-      }
-    }
-
 </style>
 </head>
 
@@ -1654,6 +1577,16 @@ function unlockAudioOnce() {
     ctx.resume().catch(() => {});
   }
   audioUnlocked = true;
+
+  // Appena l'audio è sbloccato, facciamo partire la musichetta di Home una sola volta
+  if (!hasPlayedHomeJingle) {
+    try {
+      playHomeJingle();
+      hasPlayedHomeJingle = true;
+    } catch (e) {
+      // ignora eventuali errori audio
+    }
+  }
 }
 
 // Agganciamo l’unlock al primo gesto dell’utente
@@ -3198,6 +3131,7 @@ let lastGamePageId = "level2Page";
 document.addEventListener("DOMContentLoaded", function() {
   loadSessionsFromStorage();
   renderChestGrid();
+  startNewSessionChest();
 
   const homeScreen = document.getElementById("homeScreen");
   const btnLevel1  = document.getElementById("btnLevel1");
@@ -3304,10 +3238,10 @@ document.addEventListener("DOMContentLoaded", function() {
     renderChestGrid();
   }
 
-  if (btnLevel1) btnLevel1.addEventListener("click", () => { startNewSessionChest(); showLevel("level1Page"); });
-  if (btnLevel2) btnLevel2.addEventListener("click", () => { startNewSessionChest(); showLevel("level2Page"); });
-  if (btnLevel3) btnLevel3.addEventListener("click", () => { startNewSessionChest(); showLevel("level3Page"); });
-  if (btnPlay)   btnPlay.addEventListener("click",   () => { startNewSessionChest(); showLevel("playPage"); });
+  if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page"); });
+  if (btnLevel2) btnLevel2.addEventListener("click", () => { showLevel("level2Page"); });
+  if (btnLevel3) btnLevel3.addEventListener("click", () => { showLevel("level3Page"); });
+  if (btnPlay)   btnPlay.addEventListener("click",   () => { showLevel("playPage"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
