@@ -229,18 +229,7 @@
       -webkit-overflow-scrolling: touch;
     }
 
-    .app {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: white;
-      border-radius: 12px;
-      position: relative;
-      z-index: 1;
-      display: flex;
-      flex-direction: column;
-    }
+    .app { margin: 20px; padding:0; width: calc(100% - 40px); height: calc(100% - 40px); background:white; border-radius:12px; position:relative; z-index:1; display:flex; flex-direction:column; }
 
     .top-panel {
       border-radius: 20px;
@@ -536,24 +525,25 @@
       color: #78350f;
     }
 
-    .play-timer-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-bottom: 8px;
-    }
-    .play-timer-circle {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
+    .play-timer-pill {
       background: #46d1c6;
-      display: flex;
+      color: #ffffff;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 10px rgba(15,23,42,0.35);
-      color: #ffffff;
+      min-width: 80px;
       font-family: "Baloo 2", sans-serif;
-      font-size: 1.6rem;
+      font-size: 1.2rem;
       font-weight: 700;
+      box-shadow: 0 3px 8px rgba(15,23,42,0.3);
+      cursor: default;
+    }
+    .play-timer-pill span {
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.03em;
     }
     .play-timeup-overlay {
       position: absolute;
@@ -723,21 +713,19 @@
     }
 
     .keyboard-container {
-      margin-top: auto;
-      text-align: center;
-      padding: 10px 8px 12px;
-    
   margin-left: 20px;
   margin-right: 20px;
-  margin-bottom: 20px;}
+  margin-bottom: 20px;
+  padding: 6px 4px 8px;
+}
     .piano {
-      max-width: 920px;
-      margin: 0 auto;
-      background: #d4d4d8;
-      padding: 14px 16px 18px;
-      border-radius: 18px;
-      box-shadow: 0 4px 10px rgba(15,23,42,0.18);
-    }
+  width: 100%;
+  margin: 0;
+  background: #d4d4d8;
+  padding: 14px 16px 18px;
+  border-radius: 18px;
+  box-shadow: 0 4px 10px rgba(15,23,42,0.18);
+}
     .piano-keys {
       position: relative;
       display: flex;
@@ -808,6 +796,7 @@
   
   margin-left: 20px;
   margin-right: 20px;
+  
   margin-top: 20px;}
 
     .note-buttons-wrapper {
@@ -993,7 +982,9 @@
       grid-template-columns: repeat(8, minmax(0, 1fr));
       gap: 8px;
       justify-items: stretch;
-    }
+      margin-left: 20px;
+  margin-right: 20px;
+}
 
     .chest-btn {
       border-radius: 12px;
@@ -1063,16 +1054,7 @@
     /* ===========================
        PAGINA TROFEI
        =========================== */
-    #trophyPage .app {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-      background: white;
-      border-radius: 12px;
-      position: relative;
-      z-index: 1;
-    }
+    #trophyPage .app { margin: 20px; padding:0; width: calc(100% - 40px); height: calc(100% - 40px); background:white; border-radius:12px; position:relative; z-index:1; display:flex; flex-direction:column; }
 
     .trophy-main {
       text-align: center;
@@ -1180,92 +1162,60 @@
       transform: translateX(30px);
     }
 
-    /* PATCH: icone per i pulsanti Reset audio (solo icona, niente testo) */
-    #audioResetBtn,
-    #resetAudioBtnL1,
-    #resetAudioBtnL2,
-    #resetAudioBtnL3,
-    #resetAudioBtnPlay {
-      position: relative;
-      font-size: 0; /* nasconde il testo interno */
-    }
-
-    #audioResetBtn::before,
-    #resetAudioBtnL1::before,
-    #resetAudioBtnL2::before,
-    #resetAudioBtnL3::before,
-    #resetAudioBtnPlay::before {
-      content: "🔊";
-      font-size: 1.3rem;
-    }
-
-    #resetAudioBtnL1 span,
-    #resetAudioBtnL2 span,
-    #resetAudioBtnL3 span,
-    #resetAudioBtnPlay span {
-      display: none;
-    }
-
-
     /* Stato pulsanti audio: verde ON, grigio OFF */
-    .audio-on {
-      background-color: #22c55e !important;
-    }
-    .audio-off {
-      background-color: #9ca3af !important;
-    }
+.audio-on {
+  background-color: #22c55e !important;
+}
+.audio-off {
+  background-color: #9ca3af !important;
+}
 
-    /* Rendi visibile il testo interno dei pulsanti audio */
-    #audioResetBtn,
-    #resetAudioBtnL1,
-    #resetAudioBtnL2,
-    #resetAudioBtnL3,
-    #resetAudioBtnPlay {
-      font-size: 0.9rem;
-    }
+/* HOME: icona + testo visibile */
+#audioResetBtn {
+  position: relative;
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    #audioResetBtn::before,
-    #resetAudioBtnL1::before,
-    #resetAudioBtnL2::before,
-    #resetAudioBtnL3::before,
-    #resetAudioBtnPlay::before {
-      margin-right: 0.35rem;
-    }
+#audioResetBtn::before {
+  content: "🔊";
+  font-size: 1.3rem;
+  margin-right: 0.35rem;
+}
 
+/* LIVELLI / PLAY: solo icona, nascondi il testo */
+#resetAudioBtnL1,
+#resetAudioBtnL2,
+#resetAudioBtnL3,
+#resetAudioBtnPlay {
+  position: relative;
+  font-size: 0;           /* nasconde il testo interno */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    /* OVERRIDE 2025-11: layout dei pulsanti audio
-       - Home: icona + testo in grassetto
-       - Livelli/Play: solo icona, nessun testo visibile */
-    #audioResetBtn {
-      font-size: 0.95rem;
-      font-weight: 700;
-      position: relative;
-    }
+#resetAudioBtnL1::before,
+#resetAudioBtnL2::before,
+#resetAudioBtnL3::before,
+#resetAudioBtnPlay::before {
+  content: "🔊";
+  font-size: 1.3rem;
+}
 
-    #audioResetBtn::before {
-      content: "🔊";
-      font-size: 1.3rem;
-      margin-right: 0.35rem;
-    }
-
-    #resetAudioBtnL1,
-    #resetAudioBtnL2,
-    #resetAudioBtnL3,
-    #resetAudioBtnPlay {
-      position: relative;
-      font-size: 0; /* nasconde il testo interno */
-    }
-
-    #resetAudioBtnL1::before,
-    #resetAudioBtnL2::before,
-    #resetAudioBtnL3::before,
-    #resetAudioBtnPlay::before {
-      content: "🔊";
-      font-size: 1.3rem;
-    }
-
+/* nascondi la scritta "Reset audio" nelle versioni livello/play */
+#resetAudioBtnL1 span,
+#resetAudioBtnL2 span,
+#resetAudioBtnL3 span,
+#resetAudioBtnPlay span {
+  display: none;
+}
 
 :root {
+
   /* fix per 100vh sui mobile browser */
   --vh: 1vh;
 }
@@ -1342,15 +1292,20 @@ body {
   }
 
   .keyboard-container {
-    padding: 6px 4px 8px;
-  
   margin-left: 20px;
   margin-right: 20px;
-  margin-bottom: 20px;}
+  margin-bottom: 20px;
+  padding: 6px 4px 8px;
+}
 
   .piano {
-    padding: 8px 8px 10px;
-  }
+  width: 100%;
+  margin: 0;
+  background: #d4d4d8;
+  padding: 14px 16px 18px;
+  border-radius: 18px;
+  box-shadow: 0 4px 10px rgba(15,23,42,0.18);
+}
 
   .piano-keys {
     height: 120px;
@@ -1374,6 +1329,7 @@ body {
   
   margin-left: 20px;
   margin-right: 20px;
+  
   margin-top: 20px;}
 
   .note-buttons-wrapper {
@@ -1387,6 +1343,47 @@ body {
 
   .home-container {
     padding: 20px 16px 24px;
+  }
+}
+
+
+/* ==========================================
+   OTTIMIZZAZIONE iPHONE / SCHERMI PICCOLI
+   (landscape basso tipo 440–480 px)
+   ========================================== */
+@supports (-webkit-touch-callout: none) {
+  @media (orientation: landscape) and (max-height: 480px) {
+    body { padding:4px;height:calc(var(--vh)*100); }
+    .app { margin:6px;width:calc(100% - 12px);min-height:calc(var(--vh)*100 - 12px); }
+    .top-panel { margin:4px 6px;padding:6px 8px; }
+    .top-row { gap:4px; }
+    .top-row h1 { font-size:1.5rem; }
+    .menu-btn,.trophy-btn,.hint-btn,.reset-btn,.rainbow-counter {
+      min-width:36px;min-height:36px;padding:6px 10px;font-size:0.9rem;
+    }
+    .staff-container { margin:4px 6px;padding:6px; }
+    svg.staff { max-height:130px; }
+    .keyboard-container { margin:4px 6px 6px;padding:4px 4px 6px; }
+    .piano { padding:8px 8px 10px;border-radius:14px; }
+    .piano-keys { height:110px; }
+    .white-key { font-size:0.75rem;padding-bottom:4px; }
+    .black-key { height:65%;font-size:0.65rem;padding-bottom:3px; }
+    .note-buttons-container { margin:4px 6px 6px; }
+    .note-buttons-wrapper { padding:8px 6px 10px;gap:8px; }
+    .note-button { padding:8px 12px;min-width:60px;font-size:0.9rem; }
+    .status-bar { margin-top:4px;font-size:0.8rem; }
+    .stat-pill { min-width:70px;padding:2px 6px;font-size:0.8rem; }
+  }
+  @media (max-width: 430px) {
+    .home-container { padding:20px 10px 24px;max-width:380px; }
+    .home-title { font-size:2rem; }
+    .home-subtitle { font-size:1rem;margin-bottom:16px; }
+    .home-rainbow-graphic { width:260px;height:160px;margin-bottom:10px; }
+    .home-player-box { padding:14px;margin-bottom:18px; }
+    .home-player-input { font-size:1.05rem;padding:8px 12px; }
+    .home-levels { max-width:320px;gap:10px; }
+    .home-level-btn { padding:10px 14px;font-size:1.1rem; }
+    .home-level-trophy { padding:12px 14px; }
   }
 }
 
@@ -1681,7 +1678,7 @@ body {
       </div>
     </div>
 
-    <div class="staff-container">
+    
       <svg id="staffSvgL1" class="staff" viewBox="0 0 820 260">
         <defs>
           <linearGradient id="rainbowStroke" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -1709,7 +1706,7 @@ body {
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
         <text x="88" y="195" font-size="150">&#119070;</text>
       </svg>
-      <div class="status-bar" id="statusBarL1"></div>
+      <div class="status-bar" id="statusBarL1">
     </div>
 
     <div class="note-buttons-container">
@@ -1756,7 +1753,7 @@ body {
       </div>
     </div>
 
-    <div class="staff-container">
+    
       <svg id="staffSvg" class="staff" viewBox="0 0 820 260">
         <defs>
           <linearGradient id="rainbowStroke" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -1784,7 +1781,7 @@ body {
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
         <text x="88" y="195" font-size="150">&#119070;</text>
       </svg>
-      <div class="status-bar" id="statusBar"></div>
+      <div class="status-bar" id="statusBar">
     </div>
 
     <div class="keyboard-container">
@@ -1825,7 +1822,7 @@ body {
       </div>
     </div>
 
-    <div class="staff-container">
+    
       <svg id="staffSvgL3" class="staff" viewBox="0 0 820 260">
         <defs>
           <linearGradient id="rainbowStroke" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -1853,7 +1850,7 @@ body {
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
         <text x="88" y="195" font-size="150">&#119070;</text>
       </svg>
-      <div class="status-bar" id="statusBarL3"></div>
+      <div class="status-bar" id="statusBarL3">
     </div>
 
     <div class="keyboard-container">
@@ -1892,16 +1889,14 @@ body {
             Reset audio
             <span id="rainbowCountPlay" class="rainbow-hidden-count">0</span>
           </button>
+          <button class="play-timer-pill" type="button" aria-label="Tempo rimanente Modalità Play">
+            <span id="playTimerText">05:00</span>
+          </button>
         </div>
       </div>
     </div>
 
-    <div class="staff-container">
-      <div class="play-timer-wrapper">
-        <div class="play-timer-circle">
-          <span id="playTimerText">05:00</span>
-        </div>
-      </div>
+    
       <svg id="staffSvgPlay" class="staff" viewBox="0 0 820 260">
         <line x1="150" y1="120" x2="790" y2="120" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="140" x2="790" y2="140" stroke="#111827" stroke-width="2"/>
@@ -1910,7 +1905,6 @@ body {
         <line x1="150" y1="200" x2="790" y2="200" stroke="#111827" stroke-width="2"/>
         <text x="88" y="195" font-size="150">&#119070;</text>
       </svg>
-    </div>
 
     <div class="keyboard-container">
       <div class="piano">
@@ -3723,6 +3717,19 @@ function resetAllLevels() {
   consecutiveErrorsL1 = 0;
   currentIndexL1 = 0;
   selectedColorL1 = null;
+
+  // reset completo suggerimenti L1
+  if (typeof hintCountL1 !== "undefined") {
+    hintCountL1 = 0;
+  }
+  clearHintL1();
+  if (typeof hintBtnL1El !== "undefined" && hintBtnL1El) {
+    hintBtnL1El.disabled = false;
+    if (typeof updateHintLabelL1 === "function") {
+      updateHintLabelL1();
+    }
+  }
+
   if (rainbowWinIndexL1) rainbowWinIndexL1.textContent = "0";
   if (medalsPanelL1) medalsPanelL1.innerHTML = "";
   noteButtonsL1.forEach(btn => btn.classList.remove("selected"));
@@ -3730,7 +3737,6 @@ function resetAllLevels() {
     createNotesL1();
     updateStatusL1();
   }
-  clearHintL1();
 
   // L2
   rainbows = 0;
