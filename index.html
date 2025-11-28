@@ -1387,6 +1387,32 @@ body {
   }
 }
 
+
+/* ==========================================
+   BLOCCO ROTAZIONE SOLO PER LIVELLI E PLAY
+   ========================================== */
+
+@media (orientation: portrait) {
+  /* Nasconde tutto il contenuto dei 3 livelli e del Play */
+  #level1Page,
+  #level2Page,
+  #level3Page,
+  #playPage {
+    display: none !important;
+  }
+
+  /* Mostra l’overlay che invita a ruotare */
+  #rotateOverlay {
+    display: flex !important;
+  }
+}
+
+
+/* PENTAGRAMMA A PIENA LARGHEZZA */
+svg.staff {
+  width: 100% !important;
+}
+
 </style>
 </head>
 
@@ -2027,7 +2053,7 @@ let homeIntroTimeoutId = null;
 let homeIntroTimerElapsed = false;
 
 // Stato globale audio: spento di default
-let audioEnabled = false;
+let audioEnabled = true;
 
 function getAudioCtx() {
   // Crea o ricrea il contesto se non esiste o è stato chiuso
@@ -4079,8 +4105,8 @@ document.addEventListener("DOMContentLoaded", function() {
   if (resetAudioBtnL3) resetAudioBtnL3.addEventListener("click", toggleAudio);
   if (resetAudioBtnPlay) resetAudioBtnPlay.addEventListener("click", toggleAudio);
 
-  // Imposta audio spento di default e aggiorna subito i pulsanti
-  setAudioEnabled(false);
+  // Imposta audio acceso di default e aggiorna subito i pulsanti
+  setAudioEnabled(true);
 
   // Inizializza sistema gettoni (non persistenti)
   lastTotalMedalsForTokens = getTotalMedalsCount();
