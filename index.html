@@ -248,7 +248,10 @@
       padding: 12px 18px 10px;
       background: linear-gradient(to bottom, #f9fafb, #eef2ff);
       margin-bottom: 12px;
-    }
+    
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;}
 
     .top-row {
       display: grid;
@@ -617,14 +620,15 @@
     }
 
     .staff-container {
-      position: relative;
       border-radius: 20px;
       border: 2px solid #e0e3f0;
-      padding: 26px 18px 16px;
+      padding: 18px;
       background: linear-gradient(to bottom, #fdfdff, #eef2ff);
-      margin-top: 8px;
-      margin-bottom: 8px;
-    }
+      margin-top: 12px;
+      margin-bottom: 12px;
+    
+  margin-left: 20px;
+  margin-right: 20px;}
     svg.staff {
       width: 100%;
       max-width: none;
@@ -683,25 +687,17 @@
 
     /* Barra di stato: solo Note / Errori */
     .status-bar {
-      position: absolute;
-      top: 6px;
-      left: 12px;
-      right: 12px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 0.9rem;
+      text-align: center;
+      font-size: 0.95rem;
       font-weight: 700;
-      pointer-events: none;
-      margin-top: 0;
       min-height: 1.6em;
+      margin-top: 10px;
     }
     .status-pills {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
+      display: inline-flex;
+      flex-wrap: wrap;
       gap: 8px;
-      flex-wrap: nowrap;
+      justify-content: center;
     }
     .stat-pill {
       padding: 4px 10px;
@@ -712,7 +708,6 @@
       justify-content: center;
       align-items: center;
       box-shadow: 0 2px 4px rgba(15,23,42,0.15);
-      pointer-events: auto;
     }
     .stat-notes {
       background: #dcfce7;
@@ -731,7 +726,10 @@
       margin-top: auto;
       text-align: center;
       padding: 10px 8px 12px;
-    }
+    
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;}
     .piano {
       max-width: 920px;
       margin: 0 auto;
@@ -801,9 +799,16 @@
     }
 
     .note-buttons-container {
-      margin-top: 18px;
+      
       text-align: center;
-    }
+    
+  
+  
+  
+  
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;}
 
     .note-buttons-wrapper {
       width: 100%;
@@ -817,7 +822,11 @@
       justify-content: center;
       flex-wrap: wrap;
       gap: 12px;
-    }
+    
+  
+  
+  
+  }
 
     .note-button {
       border: none;
@@ -1315,28 +1324,36 @@ body {
   .top-panel {
     padding: 8px 10px 6px;
     margin-bottom: 4px;
-  }
+  
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;}
 
   .staff-container {
-    padding: 22px 10px 12px;
-    margin-top: 2px;
-    margin-bottom: 2px;
-  }
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  
+  margin-left: 20px;
+  margin-right: 20px;}
 
   svg.staff {
-    max-height: 200px;
+    max-height: 160px;
   }
 
   .keyboard-container {
-    padding: 4px 4px 6px;
-  }
+    padding: 6px 4px 8px;
+  
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;}
 
   .piano {
-    padding: 6px 6px 8px;
+    padding: 8px 8px 10px;
   }
 
   .piano-keys {
-    height: 100px;
+    height: 120px;
   }
 
   .trophy-main {
@@ -1349,12 +1366,23 @@ body {
   }
 
   .note-buttons-container {
-    margin-top: 8px;
-  }
+    
+  
+  
+  
+  
+  
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-top: 20px;}
 
   .note-buttons-wrapper {
     padding: 10px 6px 12px;
     gap: 8px;
+  
+  
+  
+  
   }
 
   .home-container {
@@ -2023,15 +2051,6 @@ function unlockAudioOnce() {
     ctx.resume().catch(() => {});
   }
   audioUnlocked = true;
-
-  // Attiva automaticamente l'audio al primo gesto dell'utente
-  if (!audioEnabled) {
-    try {
-      setAudioEnabled(true);
-    } catch (e) {
-      // ignore
-    }
-  }
 }
 
 // Agganciamo l’unlock al primo gesto dell’utente
@@ -2648,7 +2667,6 @@ function openPlayPageFromToken() {
     playPageEl.style.display = "flex";
     clearPlayStaff();
     startPlaySession();
-    updateOrientationLock();
   }
 }
 
@@ -2682,51 +2700,6 @@ const level2PageEl  = document.getElementById("level2Page");
 const level3PageEl  = document.getElementById("level3Page");
 const playPageEl    = document.getElementById("playPage");
 const trophyPageEl  = document.getElementById("trophyPage");
-const rotateOverlayEl = document.getElementById("rotateOverlay");
-
-/**
- * Ritorna true se il device è in landscape.
- */
-function isLandscapeOrientation() {
-  if (window.matchMedia) {
-    const mq = window.matchMedia("(orientation: landscape)");
-    if (mq && typeof mq.matches === "boolean") {
-      return mq.matches;
-    }
-  }
-  return window.innerWidth > window.innerHeight;
-}
-
-/**
- * Ritorna true se è visibile una sezione che deve essere giocata solo in landscape
- * (livelli, pagina Play, pagina Trofei).
- */
-function isLandscapeLockedSectionVisible() {
-  const isLevelVisible =
-    (level1PageEl && level1PageEl.style.display !== "none") ||
-    (level2PageEl && level2PageEl.style.display !== "none") ||
-    (level3PageEl && level3PageEl.style.display !== "none");
-  const isPlayVisible   = playPageEl   && playPageEl.style.display   !== "none";
-  const isTrophyVisible = trophyPageEl && trophyPageEl.style.display !== "none";
-  return isLevelVisible || isPlayVisible || isTrophyVisible;
-}
-
-/**
- * Mostra o nasconde l'overlay di rotazione in base all'orientamento
- * e alla pagina attualmente visibile.
- */
-function updateOrientationLock() {
-  if (!rotateOverlayEl) return;
-  if (!isLandscapeOrientation() && isLandscapeLockedSectionVisible()) {
-    rotateOverlayEl.style.display = "flex";
-  } else {
-    rotateOverlayEl.style.display = "none";
-  }
-}
-
-// Listener globali per gestire cambi di orientamento / resize
-window.addEventListener("orientationchange", updateOrientationLock);
-window.addEventListener("resize", updateOrientationLock);
 const autoColorToggleL1 = document.getElementById("autoColorToggleL1");
 
 let currentNotesL1 = [];
@@ -2830,8 +2803,8 @@ function createNotesL1() {
     updateHintLabelL1();
   }
 
-  const startX = 170;
-  const endX = 770;
+  const startX = 220;
+  const endX = 780;
   const step = (endX - startX) / Math.max(1, (count - 1));
 
   let lastName = null;
@@ -3174,8 +3147,8 @@ function createNotes() {
   consecutiveErrors = 0;
   updateStatus();
 
-  const startX = 170;
-  const endX = 770;
+  const startX = 220;
+  const endX = 780;
   const step = (endX - startX) / Math.max(1, (count - 1));
 
   let lastName = null;
@@ -3454,8 +3427,8 @@ function createNotesL3() {
   consecutiveErrorsL3 = 0;
   updateStatusL3();
 
-  const startX = 170;
-  const endX = 770;
+  const startX = 220;
+  const endX = 780;
   const step = (endX - startX) / Math.max(1, (count - 1));
 
   let lastName = null;
@@ -3624,8 +3597,8 @@ const resetBtnPlay  = document.getElementById("resetBtnPlay");
 let playNotes = [];
 let playNoteIndex = 0;
 const PLAY_MAX_NOTES = 16;
-const PLAY_START_X = 170;
-const PLAY_END_X   = 770;
+const PLAY_START_X = 220;
+const PLAY_END_X   = 780;
 const PLAY_STEP    = (PLAY_END_X - PLAY_START_X) / (PLAY_MAX_NOTES - 1);
 
 function clearPlayStaff() {
@@ -4002,7 +3975,6 @@ document.addEventListener("DOMContentLoaded", function() {
   function showHome() {
     hideAllPages();
     homeScreen.style.display = "flex";
-    updateOrientationLock();
     // La musichetta introduttiva parte al primo sblocco audio (gestito da unlockAudioOnce)
   }
 
@@ -4020,7 +3992,6 @@ document.addEventListener("DOMContentLoaded", function() {
       if (pageId === "level1Page") softResetLevel1();
       if (pageId === "level2Page") softResetLevel2();
       if (pageId === "level3Page") softResetLevel3();
-      updateOrientationLock();
     }
   }
 
@@ -4037,7 +4008,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
     renderChestGrid();
     updateTokensUIAll();
-    updateOrientationLock();
   }
 
   if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page"); });
@@ -4111,7 +4081,6 @@ document.addEventListener("DOMContentLoaded", function() {
   updateTokensUIAll();
 
   showHome();
-  updateOrientationLock();
   updateRainbowCountersGlobal();
 });
 </script>
