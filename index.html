@@ -19,6 +19,7 @@
 
   <style>
     * { box-sizing: border-box; }
+    body { margin:0; padding:15px; background:#46d1c6; height:100vh; }
 
     /* ===========================
        HOME: SELEZIONE LIVELLI
@@ -131,23 +132,30 @@
 
     .home-levels {
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 16px;
+      grid-template-columns: 1fr;
+      gap: 12px;
       max-width: 360px;
       margin: 0 auto;
     }
 
+    .home-levels-separator {
+      height: 8px;
+    }
+
     .home-level-btn {
       border: none;
-      border-radius: 999px;
+      border-radius: 24px;
       padding: 14px 20px;
       font-size: 1.3rem;
       font-weight: 700;
       cursor: pointer;
-      color: #ffffff;
       box-shadow: 0 6px 14px rgba(15, 23, 42, 0.3);
       transition: transform 0.12s, box-shadow 0.12s, filter 0.12s;
       width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .home-level-btn:active {
@@ -159,12 +167,34 @@
       filter: brightness(1.05);
     }
 
-    .home-level-1    { background: #f97316; }
-    .home-level-2    { background: #4f46e5; }
-    .home-level-3    { background: #22c55e; }
-    .home-level-play { background: #ec4899; }
-    .home-audio-reset { background: #0ea5e9; }
-    
+    /* Livelli e scrigno: stile “scrigno” dorato uguale alla pagina trofei */
+    .home-level-1,
+    .home-level-2,
+    .home-level-3,
+    .home-level-trophy {
+      background: linear-gradient(to bottom, #facc15, #eab308);
+      color: #78350f;
+    }
+
+    .home-audio-reset {
+      background: #0ea5e9;
+      color: #ffffff;
+    }
+
+    /* Stato del tasto Play in home */
+    .home-play-active {
+      background: linear-gradient(to bottom, #a855f7, #6d28d9);
+      color: #f9fafb;
+    }
+
+    .home-play-disabled {
+      background: #9ca3af;
+      color: #111827;
+      cursor: default;
+      box-shadow: 0 4px 10px rgba(15, 23, 42, 0.2);
+      filter: none !important;
+      transform: none !important;
+    }
 
     .home-rainbow-graphic {
       width: 320px;
@@ -178,16 +208,12 @@
       overflow: visible;
     }
 
-    /* ===========================
+        /* ===========================
        STILE GENERALE PAGINE LIVELLO
        =========================== */
 
     body {
       font-family: "Baloo 2", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #f2f5ff;
-      min-height: 100vh;
     }
 
     .page-container {
@@ -198,15 +224,16 @@
     }
 
     .app {
-      margin: 24px;
-      padding: 24px;
-      background: #ffffff;
-      border-radius: 24px;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.1);
-      max-width: 920px;
       width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: white;
+      border-radius: 12px;
       position: relative;
       z-index: 1;
+      display: flex;
+      flex-direction: column;
     }
 
     .top-panel {
@@ -392,10 +419,15 @@
       align-items: center;
       gap: 8px;
       box-shadow: 0 3px 9px rgba(15, 23, 42, 0.16);
+      cursor: pointer;
+      border: none;
     }
     .rainbow-counter span {
       font-weight: 800;
       font-size: 1.4rem;
+    }
+    .rainbow-hidden-count {
+      display: none;
     }
 
     .medals-panel-container {
@@ -404,6 +436,137 @@
       padding: 6px 10px;
       background: #f9fafb;
     }
+
+    .medals-panel-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+    .tokens-panel {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 6px;
+      min-height: 32px;
+      min-width: 80px;
+    }
+    .token-label {
+      font-size: 0.8rem;
+      color: #374151;
+      margin-right: 4px;
+    }
+    .token-icon-btn {
+      border: none;
+      background: transparent;
+      padding: 0;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .token-icon-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+    .token-svg {
+      width: 32px;
+      height: 32px;
+      filter: drop-shadow(0 2px 4px rgba(15,23,42,0.4));
+    }
+
+    /* Gettoni nella bacheca della pagina Trofei: 3 volte più grandi */
+    #trophyTokensRow .token-svg {
+      width: 96px;
+      height: 96px;
+    }
+
+    #trophyTokensRow .trophy-token-btn {
+      padding: 4px;
+    }
+
+    .token-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 11000;
+      backdrop-filter: blur(4px);
+      background: radial-gradient(circle at center,
+        rgba(255,255,255,0.96),
+        rgba(252,211,77,0.85),
+        rgba(245,158,11,0.55));
+    }
+    .token-overlay.active {
+      display: flex;
+    }
+    .token-box {
+      background: rgba(255,255,255,0.98);
+      padding: 24px 26px 20px;
+      border-radius: 24px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      text-align: center;
+      max-width: 360px;
+    }
+    .token-big-svg {
+      width: 80px;
+      height: 80px;
+      margin-bottom: 10px;
+      filter: drop-shadow(0 6px 12px rgba(146,64,14,0.6));
+    }
+    .token-message-main {
+      font-size: 1.4rem;
+      font-weight: 700;
+      margin-bottom: 4px;
+      color: #92400e;
+    }
+    .token-message-sub {
+      font-size: 0.95rem;
+      color: #78350f;
+    }
+
+    .play-timer-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 8px;
+    }
+    .play-timer-circle {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: #46d1c6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 10px rgba(15,23,42,0.35);
+      color: #ffffff;
+      font-family: "Baloo 2", sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+    }
+    .play-timeup-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(15,23,42,0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+    .play-timeup-overlay.active {
+      display: flex;
+    }
+    .play-timeup-box {
+      background: #ffffff;
+      padding: 20px 24px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.35);
+      max-width: 320px;
+      text-align: center;
+    }
+
     .medals-panel {
       display: flex;
       flex-wrap: wrap;
@@ -457,7 +620,7 @@
     }
     svg.staff {
       width: 100%;
-      max-width: 820px;
+      max-width: none;
       display: block;
       margin: 0 auto;
       cursor: pointer;
@@ -549,8 +712,9 @@
     }
 
     .keyboard-container {
-      margin-top: 18px;
+      margin-top: auto;
       text-align: center;
+      padding: 10px 8px 12px;
     }
     .piano {
       max-width: 920px;
@@ -563,9 +727,10 @@
     .piano-keys {
       position: relative;
       display: flex;
-      height: 170px;
-      max-width: 820px;
-      margin: 0 auto;
+      height: 260px;
+      width: 100%;
+      max-width: none;
+      margin: 0;
     }
 
     .white-key {
@@ -625,10 +790,11 @@
     }
 
     .note-buttons-wrapper {
-      max-width: 920px;
-      margin: 0 auto;
+      width: 100%;
+      max-width: none;
+      margin: 12px 0 0 0;
       background: #d4d4d8;
-      padding: 16px 20px 22px;
+      padding: 16px 12px 22px;
       border-radius: 18px;
       box-shadow: 0 4px 10px rgba(15,23,42,0.18);
       display: flex;
@@ -787,11 +953,8 @@
 
 
     .home-level-trophy {
-      background: #facc15;
-      color: #78350f;
       font-size: 1.3rem;
       padding: 16px 20px;
-      grid-column: span 2;
     }
 
     /* Griglia scrigni (8x8) nella pagina trofei */
@@ -876,7 +1039,14 @@
        PAGINA TROFEI
        =========================== */
     #trophyPage .app {
-      max-width: 800px;
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: white;
+      border-radius: 12px;
+      position: relative;
+      z-index: 1;
     }
 
     .trophy-main {
@@ -984,10 +1154,203 @@
     #level1Page .auto-toggle-input:checked + .auto-slider::before {
       transform: translateX(30px);
     }
+
+    /* PATCH: icone per i pulsanti Reset audio (solo icona, niente testo) */
+    #audioResetBtn,
+    #resetAudioBtnL1,
+    #resetAudioBtnL2,
+    #resetAudioBtnL3,
+    #resetAudioBtnPlay {
+      position: relative;
+      font-size: 0; /* nasconde il testo interno */
+    }
+
+    #audioResetBtn::before,
+    #resetAudioBtnL1::before,
+    #resetAudioBtnL2::before,
+    #resetAudioBtnL3::before,
+    #resetAudioBtnPlay::before {
+      content: "🔊";
+      font-size: 1.3rem;
+    }
+
+    #resetAudioBtnL1 span,
+    #resetAudioBtnL2 span,
+    #resetAudioBtnL3 span,
+    #resetAudioBtnPlay span {
+      display: none;
+    }
+
+
+    /* Stato pulsanti audio: verde ON, grigio OFF */
+    .audio-on {
+      background-color: #22c55e !important;
+    }
+    .audio-off {
+      background-color: #9ca3af !important;
+    }
+
+    /* Rendi visibile il testo interno dei pulsanti audio */
+    #audioResetBtn,
+    #resetAudioBtnL1,
+    #resetAudioBtnL2,
+    #resetAudioBtnL3,
+    #resetAudioBtnPlay {
+      font-size: 0.9rem;
+    }
+
+    #audioResetBtn::before,
+    #resetAudioBtnL1::before,
+    #resetAudioBtnL2::before,
+    #resetAudioBtnL3::before,
+    #resetAudioBtnPlay::before {
+      margin-right: 0.35rem;
+    }
+
+
+    /* OVERRIDE 2025-11: layout dei pulsanti audio
+       - Home: icona + testo in grassetto
+       - Livelli/Play: solo icona, nessun testo visibile */
+    #audioResetBtn {
+      font-size: 0.95rem;
+      font-weight: 700;
+      position: relative;
+    }
+
+    #audioResetBtn::before {
+      content: "🔊";
+      font-size: 1.3rem;
+      margin-right: 0.35rem;
+    }
+
+    #resetAudioBtnL1,
+    #resetAudioBtnL2,
+    #resetAudioBtnL3,
+    #resetAudioBtnPlay {
+      position: relative;
+      font-size: 0; /* nasconde il testo interno */
+    }
+
+    #resetAudioBtnL1::before,
+    #resetAudioBtnL2::before,
+    #resetAudioBtnL3::before,
+    #resetAudioBtnPlay::before {
+      content: "🔊";
+      font-size: 1.3rem;
+    }
+
+
+:root {
+  /* fix per 100vh sui mobile browser */
+  --vh: 1vh;
+}
+
+/* Override body per fullscreen su iPhone in landscape */
+body {
+  height: calc(var(--vh) * 100);
+  overflow: hidden;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  /* padding che rispetta i safe area inset (Dynamic Island, bordi) */
+  padding: max(12px, env(safe-area-inset-top))
+           max(12px, env(safe-area-inset-right))
+           max(12px, env(safe-area-inset-bottom))
+           max(12px, env(safe-area-inset-left));
+}
+
+/* Overlay mostrato solo in portrait */
+#rotateOverlay {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: #46d1c6;
+  color: #0f172a;
+  text-align: center;
+  padding: 32px;
+  z-index: 20000;
+  font-family: "Baloo 2", sans-serif;
+}
+
+#rotateOverlay h1 {
+  font-size: 2rem;
+  margin-bottom: 8px;
+}
+
+#rotateOverlay p {
+  font-size: 1.1rem;
+  margin: 0;
+}
+
+/* In portrait: blocca il gioco e mostra solo il messaggio */
+@media (orientation: portrait) {
+  #rotateOverlay {
+    display: flex;
+  }
+
+  #homeScreen,
+  .page-container {
+    display: none !important;
+  }
+}
+
+/* Ottimizzazioni per landscape "basso" (es. iPhone 16 Pro Max: 956×440) */
+@media (orientation: landscape) and (max-height: 480px) {
+  .top-panel {
+    padding: 8px 10px 6px;
+    margin-bottom: 4px;
+  }
+
+  .staff-container {
+    padding: 8px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+  }
+
+  svg.staff {
+    max-height: 120px;
+  }
+
+  .keyboard-container {
+    padding: 6px 4px 8px;
+  }
+
+  .piano {
+    padding: 8px 8px 10px;
+  }
+
+  .piano-keys {
+    height: 150px;
+  }
+
+  .note-buttons-container {
+    margin-top: 8px;
+  }
+
+  .note-buttons-wrapper {
+    padding: 10px 6px 12px;
+    gap: 8px;
+  }
+
+  .home-container {
+    padding: 20px 16px 24px;
+  }
+}
+
 </style>
 </head>
 
 <body>
+  <div id="rotateOverlay">
+    <div>
+      <h1>Ruota il tuo iPhone</h1>
+      <p>Music Rainbow funziona solo in orizzontale (landscape).</p>
+    </div>
+  </div>
+
 
 <!-- ===========================
      HOME
@@ -1040,7 +1403,10 @@
       <button id="btnLevel3" class="home-level-btn home-level-3" type="button">
         Terzo livello
       </button>
-      <button id="btnPlay" class="home-level-btn home-level-play" type="button">
+
+      <div class="home-levels-separator"></div>
+
+      <button id="homePlayBtn" class="home-level-btn home-level-play home-play-disabled" type="button" disabled>
         Modalità Play
       </button>
       <button id="homeTrophyBtn" class="home-level-btn home-level-trophy" type="button">
@@ -1213,6 +1579,23 @@
 </div>
 
 <!-- ===========================
+     POPUP GETTONI PLAY
+     =========================== -->
+<div class="token-overlay" id="tokenOverlay">
+  <div class="token-box">
+    <svg class="token-big-svg" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="50" r="45" fill="#facc15" stroke="#92400e" stroke-width="4"/>
+      <circle cx="50" cy="50" r="35" fill="#fde68a" stroke="#fbbf24" stroke-width="3"/>
+      <rect x="30" y="27" width="4" height="46" fill="#eab308"/>
+      <rect x="47" y="27" width="4" height="46" fill="#eab308"/>
+      <rect x="63" y="27" width="4" height="46" fill="#eab308"/>
+    </svg>
+    <div class="token-message-main">Hai vinto un gettone!</div>
+    <div class="token-message-sub">Usalo per attivare 5 minuti di Modalità Play.</div>
+  </div>
+</div>
+
+<!-- ===========================
      LIVELLO 1
      =========================== -->
 <div id="level1Page" class="page-container" style="display:none">
@@ -1236,11 +1619,15 @@
             <input type="checkbox" id="autoColorToggleL1" class="auto-toggle-input">
             <span class="auto-slider"></span>
           </label>
-          <div class="rainbow-counter"> 🌈 <span id="rainbowCountL1">0</span> </div>
+          <button class="rainbow-counter" id="resetAudioBtnL1" type="button">
+            Reset audio
+            <span id="rainbowCountL1" class="rainbow-hidden-count">0</span>
+          </button>
         </div>
       </div>
       <div class="medals-panel-container">
         <div class="medals-panel" id="medalsPanelL1"></div>
+        <div class="tokens-panel" id="tokensPanelL1"></div>
       </div>
     </div>
 
@@ -1307,11 +1694,15 @@
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
-          <div class="rainbow-counter"> 🌈 <span id="rainbowCount">0</span> </div>
+          <button class="rainbow-counter" id="resetAudioBtnL2" type="button">
+            Reset audio
+            <span id="rainbowCount" class="rainbow-hidden-count">0</span>
+          </button>
         </div>
       </div>
       <div class="medals-panel-container">
         <div class="medals-panel" id="medalsPanel"></div>
+        <div class="tokens-panel" id="tokensPanelL2"></div>
       </div>
     </div>
 
@@ -1372,11 +1763,15 @@
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
-          <div class="rainbow-counter"> 🌈 <span id="rainbowCountL3">0</span> </div>
+          <button class="rainbow-counter" id="resetAudioBtnL3" type="button">
+            Reset audio
+            <span id="rainbowCountL3" class="rainbow-hidden-count">0</span>
+          </button>
         </div>
       </div>
       <div class="medals-panel-container">
         <div class="medals-panel" id="medalsPanelL3"></div>
+        <div class="tokens-panel" id="tokensPanelL3"></div>
       </div>
     </div>
 
@@ -1424,6 +1819,12 @@
      =========================== -->
 <div id="playPage" class="page-container" style="display:none">
   <div class="app">
+    <div id="playTimeupOverlay" class="play-timeup-overlay">
+      <div class="play-timeup-box">
+        <div class="rainbow-message-main">Tempo Play terminato!</div>
+        <div class="rainbow-message-sub">Vinci un altro gettone completando 5 medaglie.</div>
+      </div>
+    </div>
     <div class="top-panel">
       <div class="top-row">
         <div class="top-left-controls">
@@ -1437,12 +1838,20 @@
           <span>R</span><span>a</span><span>i</span><span>n</span><span>b</span><span>o</span><span>w</span>
         </h1>
         <div class="top-right-controls">
-          <div class="rainbow-counter"> 🌈 <span id="rainbowCountPlay">0</span> </div>
+          <button class="rainbow-counter" id="resetAudioBtnPlay" type="button">
+            Reset audio
+            <span id="rainbowCountPlay" class="rainbow-hidden-count">0</span>
+          </button>
         </div>
       </div>
     </div>
 
     <div class="staff-container">
+      <div class="play-timer-wrapper">
+        <div class="play-timer-circle">
+          <span id="playTimerText">05:00</span>
+        </div>
+      </div>
       <svg id="staffSvgPlay" class="staff" viewBox="0 0 820 260">
         <line x1="150" y1="120" x2="790" y2="120" stroke="#111827" stroke-width="2"/>
         <line x1="150" y1="140" x2="790" y2="140" stroke="#111827" stroke-width="2"/>
@@ -1494,6 +1903,16 @@
       </button>
 
       <div id="trophyContent" class="trophy-content" style="display:none"></div>
+
+      <div id="trophyTokensSection" class="trophy-content">
+        <div class="trophy-section">
+          <h2>GETTONI PLAY</h2>
+          <div id="trophyTokensRow" class="trophy-medals-row"></div>
+        </div>
+        <div class="trophy-note">
+          I gettoni Play non vengono salvati: si azzerano quando chiudi o ricarichi l'app.
+        </div>
+      </div>
 
       <div class="trophy-note">
         Ogni scrigno giallo raccoglie le medaglie di una sessione di gioco.<br/>
@@ -1560,6 +1979,11 @@ const AudioContextWeb = window.AudioContext || window.webkitAudioContext;
 let audioCtx = null;
 let audioUnlocked = false;
 let hasPlayedHomeJingle = false;
+let homeIntroTimeoutId = null;
+let homeIntroTimerElapsed = false;
+
+// Stato globale audio: spento di default
+let audioEnabled = false;
 
 function getAudioCtx() {
   // Crea o ricrea il contesto se non esiste o è stato chiuso
@@ -1573,20 +1997,10 @@ function getAudioCtx() {
 function unlockAudioOnce() {
   if (audioUnlocked) return;
   const ctx = getAudioCtx();
-  if (ctx.state === "suspended") {
+  if (ctx && ctx.state === "suspended") {
     ctx.resume().catch(() => {});
   }
   audioUnlocked = true;
-
-  // Appena l'audio è sbloccato, facciamo partire la musichetta di Home una sola volta
-  if (!hasPlayedHomeJingle) {
-    try {
-      playHomeJingle();
-      hasPlayedHomeJingle = true;
-    } catch (e) {
-      // ignora eventuali errori audio
-    }
-  }
 }
 
 // Agganciamo l’unlock al primo gesto dell’utente
@@ -1617,6 +2031,9 @@ function hardResetAudio() {
 }
 
 function playTone(freq) {
+  // Non suonare nulla se l'audio è disattivato
+  if (!audioEnabled) return;
+
   const ctx = getAudioCtx();
   if (!ctx) return;
 
@@ -1653,29 +2070,19 @@ function playTone(freq) {
 }
 
 function playHomeJingle() {
-  // Scala semplice da do basso a do alto con lo stesso suono della tastiera
+  // Piccola musichetta introduttiva: do, re, mi
   try {
-    const baseDo = NOTE_FREQS["do"] || 261.63;
-    const notes = [
-      { name: "do", octave: 1 },
-      { name: "re", octave: 1 },
-      { name: "mi", octave: 1 },
-      { name: "fa", octave: 1 },
-      { name: "sol", octave: 1 },
-      { name: "la", octave: 1 },
-      { name: "si", octave: 1 },
-      { name: "do", octave: 2 }
+    const seq = [
+      NOTE_FREQS["do"] || 261.63,
+      NOTE_FREQS["re"] || 293.66,
+      NOTE_FREQS["mi"] || 329.63
     ];
     let delay = 0;
-    const step = 220;
+    const step = 250;
 
-    notes.forEach(n => {
-      const base = NOTE_FREQS[n.name] || baseDo;
-      let freq = base;
-      if (n.octave === 1) freq = base / 2;
-      if (n.octave === 2) freq = base * 1;
+    seq.forEach(freq => {
       setTimeout(() => {
-        if (audioUnlocked) {
+        if (audioUnlocked && audioEnabled) {
           playTone(freq);
         }
       }, delay);
@@ -1686,6 +2093,86 @@ function playHomeJingle() {
   }
 }
 
+
+// Aggiorna il testo del pulsante audio mantenendo eventuali span interni
+function setButtonAudioLabel(btn, text) {
+  if (!btn) return;
+  const nodes = Array.from(btn.childNodes);
+  let textNode = nodes.find(n => n.nodeType === Node.TEXT_NODE);
+  if (textNode) {
+    textNode.textContent = text + " ";
+  } else {
+    btn.insertBefore(document.createTextNode(text + " "), btn.firstChild);
+  }
+}
+
+// Aggiorna aspetto (colore + label) di tutti i pulsanti audio
+function updateAudioButtonsUI() {
+  const homeBtn = document.getElementById("audioResetBtn");
+  const otherButtons = [
+    document.getElementById("resetAudioBtnL1"),
+    document.getElementById("resetAudioBtnL2"),
+    document.getElementById("resetAudioBtnL3"),
+    document.getElementById("resetAudioBtnPlay")
+  ].filter(Boolean);
+
+  // Aggiorna classi colore per tutti
+  if (homeBtn) {
+    homeBtn.classList.toggle("audio-on", audioEnabled);
+    homeBtn.classList.toggle("audio-off", !audioEnabled);
+  }
+  otherButtons.forEach(btn => {
+    btn.classList.toggle("audio-on", audioEnabled);
+    btn.classList.toggle("audio-off", !audioEnabled);
+  });
+
+  // La label testuale va solo sul pulsante della home
+  if (homeBtn) {
+    setButtonAudioLabel(homeBtn, audioEnabled ? "Disattiva audio" : "Attiva audio");
+  }
+}
+
+// Imposta lo stato audio globale
+// Piccolo reset audio ogni volta che si ri-attiva l'audio (utile per iOS/iPadOS)
+function resetAudioOnEnable() {
+  try {
+    if (audioCtx && audioCtx.state !== "closed") {
+      audioCtx.close();
+    }
+  } catch (e) {
+    // ignore
+  }
+  audioCtx = null;
+  audioUnlocked = false;
+
+  try {
+    unlockAudioOnce();
+  } catch (e) {
+    // ignore
+  }
+}
+
+function setAudioEnabled(enabled) {
+  const wasEnabled = audioEnabled;
+  audioEnabled = !!enabled;
+  updateAudioButtonsUI();
+
+  // Se lo stiamo appena attivando, fai un reset veloce dell'audio (per iPad/iOS)
+  if (audioEnabled && !wasEnabled) {
+    resetAudioOnEnable();
+
+    // Suona il jingle iniziale do–re–mi solo la prima volta
+    if (!hasPlayedHomeJingle) {
+      playHomeJingle();
+      hasPlayedHomeJingle = true;
+    }
+  }
+}
+
+// Toggle rapido (usato dai pulsanti)
+function toggleAudio() {
+  setAudioEnabled(!audioEnabled);
+}
 
 function playError() { playTone(150); }
 
@@ -1907,6 +2394,233 @@ const rainbowCountEl     = document.getElementById("rainbowCount");
 const rainbowCountElL3   = document.getElementById("rainbowCountL3");
 const rainbowCountElPlay = document.getElementById("rainbowCountPlay");
 
+// ===========================
+//   GETTONI PLAY (non persistenti)
+// ===========================
+let mintedTokens = 0;      // gettoni guadagnati in questa esecuzione
+let spentTokens  = 0;      // gettoni usati
+let lastTotalMedalsForTokens = 0; // conteggio medaglie alla precedente verifica
+
+function getAvailableTokens() {
+  return Math.max(0, mintedTokens - spentTokens);
+}
+
+function getTokenSvgMarkup(className) {
+  const cls = className || "token-svg";
+  return '<svg class="' + cls + '" viewBox="0 0 100 100" aria-hidden="true">'
+    + '<circle cx="50" cy="50" r="45" fill="#facc15" stroke="#92400e" stroke-width="4"/>'
+    + '<circle cx="50" cy="50" r="35" fill="#fde68a" stroke="#fbbf24" stroke-width="3"/>'
+    + '<rect x="30" y="27" width="4" height="46" fill="#eab308"/>'
+    + '<rect x="47" y="27" width="4" height="46" fill="#eab308"/>'
+    + '<rect x="63" y="27" width="4" height="46" fill="#eab308"/>'
+    + '</svg>';
+}
+
+function showTokenWonPopup() {
+  const overlay = document.getElementById("tokenOverlay");
+  if (!overlay) return;
+  overlay.classList.add("active");
+  setTimeout(() => {
+    overlay.classList.remove("active");
+  }, 2200);
+}
+
+function checkForNewToken() {
+  const total = getTotalMedalsCount();
+  const prevTotal = lastTotalMedalsForTokens;
+  lastTotalMedalsForTokens = total;
+  const prevFloor = Math.floor(prevTotal / 5);
+  const newFloor  = Math.floor(total / 5);
+  if (newFloor > prevFloor) {
+    const gained = newFloor - prevFloor;
+    mintedTokens += gained;
+    showTokenWonPopup();
+    updateTokensUIAll();
+  }
+}
+
+function renderTokensPanel(panelId) {
+  const panel = document.getElementById(panelId);
+  if (!panel) return;
+  const available = getAvailableTokens();
+  panel.innerHTML = "";
+  if (available <= 0) {
+    const empty = document.createElement("div");
+    empty.className = "trophy-empty";
+    empty.textContent = "Nessun gettone";
+    panel.appendChild(empty);
+    return;
+  }
+  const label = document.createElement("div");
+  label.className = "token-label";
+  label.textContent = "Gettoni:";
+  panel.appendChild(label);
+
+  for (let i = 0; i < available; i++) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "token-icon-btn";
+    btn.innerHTML = getTokenSvgMarkup();
+    btn.addEventListener("click", handleTokenClick);
+    panel.appendChild(btn);
+  }
+}
+
+function renderTokensInTrophyPage() {
+  const row = document.getElementById("trophyTokensRow");
+  if (!row) return;
+  const available = getAvailableTokens();
+  row.innerHTML = "";
+  if (available <= 0) {
+    const empty = document.createElement("div");
+    empty.className = "trophy-empty";
+    empty.textContent = "Nessun gettone Play disponibile.";
+    row.appendChild(empty);
+    return;
+  }
+
+  for (let i = 0; i < available; i++) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "token-icon-btn trophy-token-btn";
+    // svg con classe token-svg (poi resa 3x via CSS nella bacheca)
+    btn.innerHTML = getTokenSvgMarkup("token-svg");
+    btn.addEventListener("click", handleTokenClick);
+    row.appendChild(btn);
+  }
+}
+
+function updateTokensUIAll() {
+  renderTokensPanel("tokensPanelL1");
+  renderTokensPanel("tokensPanelL2");
+  renderTokensPanel("tokensPanelL3");
+  renderTokensInTrophyPage();
+}
+
+function handleTokenClick() {
+  if (getAvailableTokens() <= 0) return;
+  if (playSessionActive) {
+    alert("Hai già una sessione Play attiva.");
+    return;
+  }
+  const ok = window.confirm("Vuoi usare il gettone?");
+  if (!ok) return;
+  spentTokens++;
+  updateTokensUIAll();
+  openPlayPageFromToken();
+}
+
+// ===========================
+//   TIMER MODALITÀ PLAY (5 minuti)
+// ===========================
+let playTimerSeconds = 0;
+let playTimerIntervalId = null;
+let playSessionActive = false;
+
+function updateHomePlayButtonState() {
+  if (!homePlayBtn) return;
+  homePlayBtn.classList.remove("home-play-active", "home-play-disabled");
+  if (playSessionActive) {
+    homePlayBtn.disabled = false;
+    homePlayBtn.classList.add("home-play-active");
+  } else {
+    homePlayBtn.disabled = true;
+    homePlayBtn.classList.add("home-play-disabled");
+  }
+}
+
+function formatSeconds(sec) {
+  const m = Math.floor(sec / 60);
+  const s = sec % 60;
+  const mm = String(m).padStart(2,"0");
+  const ss = String(s).padStart(2,"0");
+  return mm + ":" + ss;
+}
+
+function updatePlayTimerDisplay() {
+  const el = document.getElementById("playTimerText");
+  if (!el) return;
+  el.textContent = formatSeconds(playTimerSeconds);
+}
+
+function stopPlaySession(resetToZero) {
+  playSessionActive = false;
+  if (playTimerIntervalId) clearInterval(playTimerIntervalId);
+  playTimerIntervalId = null;
+  if (resetToZero) {
+    playTimerSeconds = 0;
+    updatePlayTimerDisplay();
+  }
+  updateHomePlayButtonState();
+}
+
+function endPlaySessionTimeUp() {
+  stopPlaySession(false);
+  const overlay = document.getElementById("playTimeupOverlay");
+  const playVisible = playPageEl && playPageEl.style.display !== "none";
+  if (overlay && playVisible) {
+    overlay.classList.add("active");
+    setTimeout(() => {
+      overlay.classList.remove("active");
+      if (playPageEl) playPageEl.style.display = "none";
+      if (lastGamePageId === "level1Page") {
+        if (level1PageEl) level1PageEl.style.display = "flex";
+      } else if (lastGamePageId === "level3Page") {
+        if (level3PageEl) level3PageEl.style.display = "flex";
+      } else {
+        if (level2PageEl) level2PageEl.style.display = "flex";
+        lastGamePageId = "level2Page";
+      }
+    }, 2500);
+  } else {
+    if (playPageEl) playPageEl.style.display = "none";
+    if (lastGamePageId === "level1Page") {
+      if (level1PageEl) level1PageEl.style.display = "flex";
+    } else if (lastGamePageId === "level3Page") {
+      if (level3PageEl) level3PageEl.style.display = "flex";
+    } else {
+      if (level2PageEl) level2PageEl.style.display = "flex";
+      lastGamePageId = "level2Page";
+    }
+  }
+}
+
+function startPlaySession() {
+  playTimerSeconds = 300;
+  playSessionActive = true;
+  const overlay = document.getElementById("playTimeupOverlay");
+  if (overlay) overlay.classList.remove("active");
+  updatePlayTimerDisplay();
+  updateHomePlayButtonState();
+  if (playTimerIntervalId) clearInterval(playTimerIntervalId);
+  playTimerIntervalId = setInterval(() => {
+    playTimerSeconds--;
+    if (playTimerSeconds <= 0) {
+      playTimerSeconds = 0;
+      updatePlayTimerDisplay();
+      endPlaySessionTimeUp();
+    } else {
+      updatePlayTimerDisplay();
+    }
+  }, 1000);
+}
+
+// Apertura pagina Play solo tramite gettone
+function openPlayPageFromToken() {
+  const homeScreen = document.getElementById("homeScreen");
+  if (homeScreen) homeScreen.style.display = "none";
+  if (trophyPageEl) trophyPageEl.style.display = "none";
+  if (level1PageEl) level1PageEl.style.display = "none";
+  if (level2PageEl) level2PageEl.style.display = "none";
+  if (level3PageEl) level3PageEl.style.display = "none";
+  if (playPageEl) {
+    playPageEl.style.display = "flex";
+    clearPlayStaff();
+    startPlaySession();
+  }
+}
+
+
 function getTotalMedalsCount() {
   return totalBronze + totalSilver + totalGold;
 }
@@ -1949,7 +2663,7 @@ let autoColorL1 = false;
 let hintCircleL1 = null;
 let hintTimeoutL1 = null;
 let hintCountL1 = 0;
-const MAX_HINTS_L1 = 3;
+const MAX_HINTS_L1 = 5;
 let hintBtnL1El = null;
 
 function clearHintL1() {
@@ -2034,9 +2748,8 @@ function createNotesL1() {
   consecutiveErrorsL1 = 0;
   updateStatusL1();
 
-  hintCountL1 = 0;
   if (hintBtnL1El) {
-    hintBtnL1El.disabled = false;
+    hintBtnL1El.disabled = (hintCountL1 >= MAX_HINTS_L1);
     updateHintLabelL1();
   }
 
@@ -2223,6 +2936,7 @@ function showRainbowL1() {
   consecutiveErrorsL1 = 0;
   updateStatusL1();
   updateRainbowCountersGlobal();
+  checkForNewToken();
 
   const totalDuration = MELODY_STEP_MS * currentNotesL1.length + 600;
 
@@ -2514,6 +3228,7 @@ function showRainbow() {
   consecutiveErrors = 0;
   updateStatus();
   updateRainbowCountersGlobal();
+  checkForNewToken();
 
   const totalDuration = MELODY_STEP_MS * currentNotes.length + 600;
 
@@ -2792,6 +3507,7 @@ function showRainbowL3() {
   consecutiveErrorsL3 = 0;
   updateStatusL3();
   updateRainbowCountersGlobal();
+  checkForNewToken();
 
   const totalDuration = MELODY_STEP_MS * currentNotesL3.length + 600;
 
@@ -2844,6 +3560,7 @@ function clearPlayStaff() {
 
 function addPlayNote(noteName, octave) {
   if (!staffSvgPlay) return;
+  if (!playSessionActive) return;
   const y = getStaffY(noteName, octave);
   if (y == null) return;
 
@@ -3107,19 +3824,22 @@ function renderChestGrid() {
 
 if (clearChestsBtn) {
   clearChestsBtn.addEventListener("click", () => {
-    const pwd = window.prompt("Per cancellare tutti gli scrigni digita la password: scrigno");
-    if (pwd === null) return;
-    if (pwd === "scrigno") {
-      clearAllSessionChests();
-      if (trophyContentEl) {
-        trophyContentEl.style.display = "none";
-        trophyContentEl.innerHTML = "";
-      }
-      renderChestGrid();
-      alert("Tutti gli scrigni sono stati cancellati.");
-    } else {
-      alert("Password errata.");
+    const conferma = window.confirm("Cancellare tutto?");
+    if (!conferma) return;
+
+    // Svuota tutte le sessioni esistenti
+    clearAllSessionChests();
+
+    // Crea subito una nuova sessione vuota per la stessa partita
+    startNewSessionChest();
+
+    if (trophyContentEl) {
+      trophyContentEl.style.display = "none";
+      trophyContentEl.innerHTML = "";
     }
+    // Aggiorna la griglia degli scrigni
+    renderChestGrid();
+    alert("Tutti gli scrigni sono stati cancellati.");
   });
 }
 /* ===========================
@@ -3127,6 +3847,7 @@ if (clearChestsBtn) {
    =========================== */
 
 let lastGamePageId = "level2Page";
+let homePlayBtn = null;
 
 document.addEventListener("DOMContentLoaded", function() {
   loadSessionsFromStorage();
@@ -3137,11 +3858,12 @@ document.addEventListener("DOMContentLoaded", function() {
   const btnLevel1  = document.getElementById("btnLevel1");
   const btnLevel2  = document.getElementById("btnLevel2");
   const btnLevel3  = document.getElementById("btnLevel3");
-  const btnPlay    = document.getElementById("btnPlay");
   const level1Page = document.getElementById("level1Page");
   const level2Page = document.getElementById("level2Page");
   const level3Page = document.getElementById("level3Page");
   const playPage   = document.getElementById("playPage");
+
+  homePlayBtn = document.getElementById("homePlayBtn");
 
   const menuBtnL1   = document.getElementById("menuBtnL1");
   const menuBtnL2   = document.getElementById("menuBtnL2");
@@ -3160,6 +3882,10 @@ document.addEventListener("DOMContentLoaded", function() {
   const genderOptionLabels = document.querySelectorAll(".home-gender-option");
   const homeTrophyBtn = document.getElementById("homeTrophyBtn");
   const audioResetBtn = document.getElementById("audioResetBtn");
+  const resetAudioBtnL1 = document.getElementById("resetAudioBtnL1");
+  const resetAudioBtnL2 = document.getElementById("resetAudioBtnL2");
+  const resetAudioBtnL3 = document.getElementById("resetAudioBtnL3");
+  const resetAudioBtnPlay = document.getElementById("resetAudioBtnPlay");
 
   function refreshGenderButtons() {
     genderOptionLabels.forEach(label => {
@@ -3199,10 +3925,7 @@ document.addEventListener("DOMContentLoaded", function() {
   function showHome() {
     hideAllPages();
     homeScreen.style.display = "flex";
-    if (!hasPlayedHomeJingle && audioUnlocked) {
-      playHomeJingle();
-      hasPlayedHomeJingle = true;
-    }
+    // La musichetta introduttiva parte al primo sblocco audio (gestito da unlockAudioOnce)
   }
 
   function showLevel(pageId) {
@@ -3211,8 +3934,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const pageMap = {
       "level1Page": level1Page,
       "level2Page": level2Page,
-      "level3Page": level3Page,
-      "playPage":   playPage
+      "level3Page": level3Page
     };
     if (pageMap[pageId]) {
       pageMap[pageId].style.display = "flex";
@@ -3220,7 +3942,6 @@ document.addEventListener("DOMContentLoaded", function() {
       if (pageId === "level1Page") softResetLevel1();
       if (pageId === "level2Page") softResetLevel2();
       if (pageId === "level3Page") softResetLevel3();
-      if (pageId === "playPage")   clearPlayStaff();
     }
   }
 
@@ -3236,12 +3957,12 @@ document.addEventListener("DOMContentLoaded", function() {
       trophyContentEl.innerHTML = "";
     }
     renderChestGrid();
+    updateTokensUIAll();
   }
 
   if (btnLevel1) btnLevel1.addEventListener("click", () => { showLevel("level1Page"); });
   if (btnLevel2) btnLevel2.addEventListener("click", () => { showLevel("level2Page"); });
   if (btnLevel3) btnLevel3.addEventListener("click", () => { showLevel("level3Page"); });
-  if (btnPlay)   btnPlay.addEventListener("click",   () => { showLevel("playPage"); });
   if (homeTrophyBtn) homeTrophyBtn.addEventListener("click", showTrophyPage);
 
   if (menuBtnL1)   menuBtnL1.addEventListener("click", showHome);
@@ -3253,6 +3974,22 @@ document.addEventListener("DOMContentLoaded", function() {
   if (trophyBtnL2)   trophyBtnL2.addEventListener("click", showTrophyPage);
   if (trophyBtnL3)   trophyBtnL3.addEventListener("click", showTrophyPage);
   if (trophyBtnPlay) trophyBtnPlay.addEventListener("click", showTrophyPage);
+  if (homePlayBtn) {
+    homePlayBtn.addEventListener("click", () => {
+      if (!playSessionActive) return;
+      homeScreen.style.display = "none";
+      level1Page.style.display = "none";
+      level2Page.style.display = "none";
+      level3Page.style.display = "none";
+      trophyPageEl.style.display = "none";
+      if (playPage) {
+        playPage.style.display = "flex";
+        lastGamePageId = "playPage";
+      }
+    });
+  }
+
+  updateHomePlayButtonState();
 
   if (trophyBackBtn) {
     trophyBackBtn.addEventListener("click", () => {
@@ -3279,9 +4016,21 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   if (audioResetBtn) {
-    audioResetBtn.addEventListener("click", hardResetAudio);
+    audioResetBtn.addEventListener("click", toggleAudio);
   }
+  if (resetAudioBtnL1) resetAudioBtnL1.addEventListener("click", toggleAudio);
+  if (resetAudioBtnL2) resetAudioBtnL2.addEventListener("click", toggleAudio);
+  if (resetAudioBtnL3) resetAudioBtnL3.addEventListener("click", toggleAudio);
+  if (resetAudioBtnPlay) resetAudioBtnPlay.addEventListener("click", toggleAudio);
 
+  // Imposta audio spento di default e aggiorna subito i pulsanti
+  setAudioEnabled(false);
+
+  // Inizializza sistema gettoni (non persistenti)
+  lastTotalMedalsForTokens = getTotalMedalsCount();
+  updateTokensUIAll();
+
+  showHome();
   updateRainbowCountersGlobal();
 });
 </script>
@@ -3297,6 +4046,23 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
   }
+</script>
+
+
+<script>
+// Fix 100vh su Safari / iOS usando una variabile CSS --vh
+(function () {
+  function updateViewportVH() {
+    var vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", vh + "px");
+  }
+
+  window.addEventListener("resize", updateViewportVH);
+  window.addEventListener("orientationchange", updateViewportVH);
+
+  // prima chiamata
+  updateViewportVH();
+})();
 </script>
 
 </body>
